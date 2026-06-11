@@ -53,7 +53,80 @@
     @media(max-width:1180px){.app{grid-template-columns:1fr;grid-template-rows:64px auto 1fr}.sidebar{min-height:54px}.nav{justify-content:flex-start;overflow:auto}.brand-copy strong,.project-title{font-size:20px}.project-title{min-height:36px}.kpis,.alert-dashboard{grid-template-columns:repeat(2,1fr)}.dashboard,.dashboard-right{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr 1fr}} @media(max-width:720px){.system-header{height:auto;min-height:64px;grid-template-columns:1fr;justify-items:start;align-items:flex-start;padding:10px 12px;gap:8px}.user-chip{justify-self:start}.header-date{justify-self:start;text-align:left}.system-brand{width:100%;align-items:flex-start}.brand-copy{display:grid;gap:6px}.brand-copy strong,.project-title{font-size:16px}.project-title{min-height:30px}.header-date{text-align:left}.nav{justify-content:flex-start}.nav button{flex:0 0 auto}.topbar{height:auto;grid-template-columns:1fr;align-items:stretch;padding:12px}.top-actions{grid-column:auto}.top-actions .primary{min-width:0;flex:1}.content{padding:12px 12px 54px}.kpis,.alert-dashboard,.summary-grid,form,.partner-filters,.alert-tools{grid-template-columns:1fr}.wide{grid-column:auto}.toolbar{grid-template-columns:1fr}.chart-row,.flow-group,.donut-wrap{grid-template-columns:1fr}.chart-value{text-align:left}.donut{margin:auto}}
     #drawer{z-index:1000}.drawer.open .overlay{z-index:0}.drawer.open .drawer-panel{z-index:1}.module-head{min-height:62px;height:auto;cursor:pointer}.module-head h3{min-width:0}.module-title-wrap{display:grid;gap:3px;min-width:0}.module-toggle{width:34px;min-width:34px;height:34px;padding:0;border-radius:999px;font-size:18px;font-weight:900;line-height:1;color:#5f7287;background:#f7fafc}.module.collapsed>:not(.module-head){display:none!important}.photo-preview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}.photo-slot{min-height:92px;border:1px dashed #c9d6e2;border-radius:8px;background:#fff;display:grid;grid-template-columns:74px 1fr auto;gap:10px;align-items:center;padding:9px;min-width:0}.photo-slot.empty{display:grid;place-items:center;text-align:center;color:#7c8da0;background:#f8fbfd}.photo-slot img{width:74px;height:74px;object-fit:cover;border-radius:6px;border:1px solid var(--line)}.photo-slot .help{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.photo-remove{width:30px;min-width:30px;height:30px;border-radius:999px;padding:0;color:#c62828}.photo-add{min-height:92px;border:1px dashed #88bce8;border-radius:8px;background:#f4faff;color:#0078d4;font-weight:900;font-size:24px}.drop-zone strong{font-size:14px}
     @media(max-width:860px){.app{grid-template-rows:auto auto 1fr}.system-header{grid-template-columns:minmax(0,1fr) auto;align-items:center;padding:10px 12px;gap:10px}.system-brand{grid-column:1/-1;width:100%;gap:10px}.company-mark{height:42px;min-width:112px;font-size:20px}.brand-copy strong{white-space:normal;overflow:visible;text-overflow:clip;font-size:22px;line-height:1.1}.project-sub{white-space:normal}.user-chip{grid-column:1/-1;justify-self:center;max-width:100%;white-space:normal;text-align:center}.header-date{grid-column:1/-1;justify-self:center;text-align:center;border-left:0;padding-left:0}.header-date #headerTime{font-size:30px}.sidebar{padding:0 8px}.nav{justify-content:flex-start;overflow-x:auto;scrollbar-width:thin}.nav button{flex:0 0 auto;min-width:128px;justify-content:center}.topbar{grid-template-columns:1fr;padding:12px;gap:10px}.title{grid-column:auto}.title h2{white-space:normal;font-size:28px;line-height:1.15}.top-actions{grid-column:auto;width:100%;display:grid;grid-template-columns:1fr 1fr}.top-actions button{min-width:0}.alert-card{padding:18px 20px}.alert-card strong{font-size:42px}.dashboard-right .alerts{min-height:240px;max-height:360px}.table-wrap{max-height:calc(100vh - 390px)}.tabs{overflow-x:auto;padding:0 8px}.tabs button{flex:0 0 auto}.toolbar{grid-template-columns:1fr}.photo-preview{grid-template-columns:1fr}.photo-slot{grid-template-columns:64px 1fr auto}.photo-slot img{width:64px;height:64px}.drawer-panel form{grid-template-columns:1fr}.wide{grid-column:1}}
-  #drawer.open{display:flex;align-items:center;justify-content:center;padding:20px}#drawer .overlay{position:fixed;inset:0}#drawer .drawer-panel{position:relative;right:auto;top:auto;margin:auto;height:auto;max-height:calc(100vh - 40px);width:min(640px,96vw);border-radius:16px;box-shadow:0 30px 70px rgba(12,26,38,.34);grid-template-rows:auto 1fr}@media(max-width:720px){#drawer.open{padding:10px}#drawer .drawer-panel{width:100%;max-height:calc(100vh - 20px)}}</style>
+  #drawer.open{display:flex;align-items:center;justify-content:center;padding:20px}#drawer .overlay{position:fixed;inset:0}#drawer .drawer-panel{position:relative;right:auto;top:auto;margin:auto;height:auto;max-height:calc(100vh - 40px);width:min(640px,96vw);border-radius:16px;box-shadow:0 30px 70px rgba(12,26,38,.34);grid-template-rows:auto 1fr}@media(max-width:720px){#drawer.open{padding:10px}#drawer .drawer-panel{width:100%;max-height:calc(100vh - 20px)}}
+    /* Mobile web refinement */
+    @media(max-width:640px){
+      html,body{width:100%;overflow-x:hidden;font-size:14px}
+      body{background:#f3f6f9}
+      button,input,select,textarea{font-size:16px}
+      .app{min-height:100svh;display:block}
+      .system-header{display:grid!important;grid-template-columns:82px minmax(0,1fr);grid-auto-rows:auto;padding:10px 12px 9px;gap:8px 10px;position:relative}
+      .system-brand{grid-column:1/-1;display:grid;grid-template-columns:82px minmax(0,1fr);gap:10px;align-items:center;width:100%}
+      .company-mark{height:38px;min-width:82px;font-size:13px;border-radius:8px}
+      .brand-copy{min-width:0;gap:1px}
+      .brand-copy strong{font-size:18px;line-height:1.12;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+      .project-sub{font-size:12px;white-space:normal;line-height:1.25}
+      .user-chip{grid-column:1/-1;justify-self:stretch;text-align:center;padding:6px 10px;font-size:13px;white-space:normal}
+      .header-date{grid-column:1/-1;justify-self:stretch;text-align:center;border-left:0;padding-left:0;font-size:12px}
+      .header-date #headerTime{font-size:24px;margin-right:6px}
+      .sidebar{position:sticky;top:0;z-index:12;min-height:48px;padding:6px 8px;background:#fff;box-shadow:0 2px 10px rgba(25,42,70,.08)}
+      .nav{justify-content:flex-start;gap:6px;overflow-x:auto;scroll-snap-type:x proximity;padding:0 2px;-webkit-overflow-scrolling:touch}
+      .nav button{flex:0 0 auto;min-width:max-content;height:38px;padding:0 12px;border-radius:999px;scroll-snap-align:start;color:#5f7287;background:transparent}
+      .nav button.active{background:#eaf5ff;color:#1685d7}
+      main{display:block}
+      .topbar{position:sticky;top:50px;z-index:11;display:grid;grid-template-columns:1fr;gap:10px;padding:10px 12px;background:#fff}
+      .title h2{font-size:22px;line-height:1.15;white-space:normal}
+      .top-actions{grid-column:auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+      .top-actions button{min-width:0;min-height:44px;padding:0 8px;border-radius:10px;font-size:14px;line-height:1.15}
+      #wmsRefresh{grid-column:1/-1;background:#fff}
+      #wmsSyncDot{position:absolute;right:14px;top:14px}
+      .content{padding:10px 8px 64px;gap:12px}
+      .alert-dashboard{grid-template-columns:1fr!important;gap:10px}
+      .alert-card{border-radius:14px;padding:14px 16px;gap:8px}
+      .alert-card strong{font-size:38px}
+      .alert-tools{grid-template-columns:1fr 1fr!important;gap:8px;padding:12px}
+      .alert-tools label{grid-column:1/-1}
+      .module{border-radius:14px}
+      .module-head{min-height:54px;padding:10px 12px;gap:8px;align-items:flex-start}
+      .module-head h3{font-size:17px;line-height:1.2}
+      .module-head .meta{font-size:12px;text-align:right;line-height:1.25}
+      .module-toggle{width:34px;min-width:34px;height:34px}
+      .chart-wrap{padding:12px;gap:12px}
+      .flow-group{grid-template-columns:1fr;gap:8px;padding:12px 0}
+      .metric-row{grid-template-columns:46px 1fr 78px;gap:8px}
+      .legend{padding:0 12px 12px}
+      .partner-filters,.toolbar{grid-template-columns:1fr!important;padding:10px 12px;gap:10px}
+      .tabs{overflow-x:auto;padding:0 8px;-webkit-overflow-scrolling:touch}
+      .tabs button{flex:0 0 auto;height:44px;padding:0 12px}
+      .table-wrap{max-height:calc(100svh - 330px);overflow:auto;border-radius:0 0 14px 14px;-webkit-overflow-scrolling:touch}
+      table{min-width:880px;font-size:13px}
+      th,td{padding:8px 9px}
+      th{top:0;z-index:5}
+      .name{max-width:240px;min-width:180px}
+      .footerbar{display:grid;grid-template-columns:1fr;gap:8px;padding:10px 12px}
+      .pager{justify-content:space-between}
+      .pager button{min-width:78px}
+      #drawer,#settings{z-index:1000}
+      #drawer.open,#settings.open{display:block!important;padding:0}
+      #drawer .overlay,#settings .overlay{position:fixed;inset:0}
+      #drawer .drawer-panel,#settings .drawer-panel{position:fixed;inset:0;width:100%;height:100svh;max-height:none;border-radius:0;display:grid;grid-template-rows:auto minmax(0,1fr)}
+      .drawer-head{min-height:54px;padding:10px 12px}
+      .drawer-head h3{font-size:18px;line-height:1.2}
+      .drawer-head button{min-width:70px;height:38px}
+      form{grid-template-columns:1fr!important;padding:12px;gap:11px;overflow:auto;-webkit-overflow-scrolling:touch}
+      .wide{grid-column:1!important}
+      .drop-zone{padding:14px 10px;min-height:96px}
+      .photo-preview{grid-template-columns:1fr!important;padding:8px}
+      .photo-slot{grid-template-columns:58px minmax(0,1fr) 30px;min-height:78px;padding:8px}
+      .photo-slot img{width:58px;height:58px}
+      .photo-add{min-height:72px}
+      textarea{min-height:92px}
+      form button[type="submit"]{min-height:48px;border-radius:10px;font-size:16px}
+      .dashboard-right .alerts{min-height:220px;max-height:320px;padding:0 10px 10px}
+      .alert-table{min-width:680px}
+      .copyright{position:static;padding:8px 0}
+    }
+</style>
 </head>
 <body>
   <div class="app">
@@ -176,7 +249,7 @@
     function syncBadge(r){if(!r.manual)return ''; if(r.syncStatus==='synced')return '<span class="badge sync">Đã gửi GS</span>'; if(r.syncStatus==='failed')return '<span class="badge fail">Lỗi gửi</span>'; if(r.syncStatus==='sending')return '<span class="badge low">Đang gửi</span>'; return '<span class="badge low">Chưa gửi</span>';}
     function renderTable(){if(view==='dashboard')return; const rows=currentRows(); const total=rows.length; const pages=Math.max(1,Math.ceil(total/pageSize)); page=Math.min(page,pages); const slice=rows.slice((page-1)*pageSize,page*pageSize); $('moduleTitle').textContent=view==='inventory'?'Danh sách tồn kho':view==='inbound'?'Danh sách phiếu nhập':view==='outbound'?'Danh sách phiếu xuất':'Dữ liệu theo sheet nguồn'; $('moduleMeta').textContent=fmt.format(total)+' dòng'; if(view==='inbound'||view==='outbound'){$('thead').innerHTML='<tr><th>Ngày</th><th>Sheet/kho</th><th>Mã</th><th>Tên vật tư</th><th>ĐVT</th><th class="num">Khối lượng</th><th>Đối tác</th><th>Người thực hiện</th><th>Đồng bộ</th><th>Ghi chú</th></tr>'; $('tbody').innerHTML=slice.map(r=>`<tr><td>${esc(r.date||'-')}</td><td class="source-list" title="${esc(r.source)}">${esc(prettySource(canonicalSource(r.source)))}</td><td class="code">${esc(r.code)}</td><td class="name" title="${esc(r.name)}">${esc(r.name)}</td><td>${esc(r.unit)}</td><td class="num"><span class="badge ${r.type}">${fmt.format(n(r.qty))}</span></td><td>${esc(displayPartner(r))}</td><td>${esc(r.person||'')}</td><td>${syncBadge(r)}</td><td class="name" title="${esc(r.note||r.area||'')}">${esc(r.note||r.area||'')}</td></tr>`).join('');} else {$('thead').innerHTML='<tr><th>Sheet/kho</th><th>Mã vật tư</th><th>Tên vật tư</th><th>ĐVT</th><th class="num">Đã nhập</th><th class="num">Đã xuất</th><th class="num">Tồn</th><th>Trạng thái</th><th>Ghi chú</th></tr>'; $('tbody').innerHTML=slice.map(r=>`<tr><td class="source-list" title="${esc(r.source)}">${esc((r.sources||[r.source]).map(prettySource).join(' / '))}</td><td class="code">${esc(r.code)}</td><td class="name" title="${esc(r.name)}">${esc(r.name)}</td><td>${esc(r.unit)}</td><td class="num">${fmt.format(n(r.inQty))}</td><td class="num">${fmt.format(n(r.outQty))}</td><td class="num"><b>${fmt.format(Math.max(0,n(r.stock)))}</b></td><td>${statusBadge(r)}</td><td class="name" title="${esc(r.note||'')}">${esc(r.note||'')}</td></tr>`).join('');} $('rowInfo').textContent=`Hiển thị ${total?((page-1)*pageSize+1):0}-${Math.min(page*pageSize,total)} / ${fmt.format(total)} dòng`; $('pageInfo').textContent=`Trang ${page}/${pages}`; $('prevPage').disabled=page<=1; $('nextPage').disabled=page>=pages;}
     function render(){renderShell();renderDashboard();renderTable();save()}
-    function fileToPayload(file){return new Promise((resolve,reject)=>{if(!file){resolve(null);return} const img=new Image(); const reader=new FileReader(); reader.onload=()=>{img.onload=()=>{const max=1280,ratio=Math.min(1,max/Math.max(img.width,img.height)); const canvas=document.createElement('canvas'); canvas.width=Math.max(1,Math.round(img.width*ratio)); canvas.height=Math.max(1,Math.round(img.height*ratio)); const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height); const dataUrl=canvas.toDataURL('image/jpeg',.72); const base64=String(dataUrl).split(',')[1]||''; resolve({name:String(file.name||'anh-minh-chung.jpg').replace(/\.[^.]+$/,'.jpg'),type:'image/jpeg',base64,dataUrl,originalSize:file.size,size:Math.round(base64.length*.75)})}; img.onerror=()=>{const fallback=new FileReader(); fallback.onload=()=>{const dataUrl=fallback.result; const base64=String(dataUrl).split(',')[1]||''; resolve({name:file.name,type:file.type,base64,dataUrl,originalSize:file.size,size:file.size})}; fallback.onerror=reject; fallback.readAsDataURL(file)}; img.src=reader.result}; reader.onerror=reject; reader.readAsDataURL(file);})}
+    function fileToPayload(file){return new Promise((resolve,reject)=>{if(!file){resolve(null);return} const img=new Image(); const reader=new FileReader(); reader.onload=()=>{img.onload=()=>{const max=900,ratio=Math.min(1,max/Math.max(img.width,img.height)); const canvas=document.createElement('canvas'); canvas.width=Math.max(1,Math.round(img.width*ratio)); canvas.height=Math.max(1,Math.round(img.height*ratio)); const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height); const dataUrl=canvas.toDataURL('image/jpeg',.62); const base64=String(dataUrl).split(',')[1]||''; resolve({name:String(file.name||'anh-minh-chung.jpg').replace(/\.[^.]+$/,'.jpg'),type:'image/jpeg',base64,dataUrl,originalSize:file.size,size:Math.round(base64.length*.75)})}; img.onerror=()=>{const fallback=new FileReader(); fallback.onload=()=>{const dataUrl=fallback.result; const base64=String(dataUrl).split(',')[1]||''; resolve({name:file.name,type:file.type,base64,dataUrl,originalSize:file.size,size:file.size})}; fallback.onerror=reject; fallback.readAsDataURL(file)}; img.src=reader.result}; reader.onerror=reject; reader.readAsDataURL(file);})}
     async function filesToPayloads(files){const out=[]; for(const file of files){const p=await fileToPayload(file); if(p)out.push(p)} return out}
     async function pushToDrive(record, photos){const cfg=config(); if(!cfg.gasUrl)return {skipped:true}; photos=photos||[]; const first=photos[0]||null; const payload={...record,photos,photoBase64:first?.base64||'',photoName:photos.map(p=>p.name).join(', '),photoMimeType:first?.type||''}; const body=JSON.stringify(payload); const controller=new AbortController(); const timer=setTimeout(()=>controller.abort(),90000); try{await fetch(cfg.gasUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body,signal:controller.signal}); return {ok:true, opaque:true};}catch(err){throw new Error(err.name==='AbortError'?'Gửi quá lâu, ảnh có thể vẫn đang xử lý trên Google Sheet':'Không gửi được Apps Script')}finally{clearTimeout(timer);}}
     function initCollapsibles(){document.querySelectorAll('.content .module>.module-head').forEach((head,i)=>{if(head.querySelector('.module-toggle'))return; const mod=head.closest('.module'); const btn=document.createElement('button'); const toggle=()=>{mod.classList.toggle('collapsed'); btn.textContent=mod.classList.contains('collapsed')?'+':'−';}; btn.type='button'; btn.className='module-toggle'; btn.title='Thu / mở khối dữ liệu'; btn.setAttribute('aria-label','Thu / mở khối dữ liệu'); btn.textContent='−'; btn.onclick=e=>{e.preventDefault();e.stopPropagation();toggle();}; head.onclick=e=>{if(e.target.closest('button,input,select,textarea,a'))return; toggle();}; head.appendChild(btn);});}
