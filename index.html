@@ -348,7 +348,7 @@ th{background:#f4f5fb!important;color:#5b6478!important;}
     const configKey='amis-kho-drive-config-v1';
     const fmt=new Intl.NumberFormat('en-US');
     /* ===== Quy doi THUNG -> m2 cho gach (m2/thung = Dai x Cao(mm)/1e6 x so vien/thung) ===== */
-    const BOX_M2={'V-FIN-001A':2.16,'V-FIN-001B':1.44,'V-FIN-004A':1.44,'V-FIN-004B':1.44,'V-FIN-005A':1.17,"V-FIN-005A'":1.17,'V-FIN-005B':1.125,'V-FIN-009':1.4256,'V-FIN-057':0.72};
+    const BOX_M2={'V-FIN-001A':2.16,'V-FIN-001B':1.44,'V-FIN-004A':1.44,'V-FIN-004B':1.44,'V-FIN-005A':1.17,"V-FIN-005A'":1.17,'V-FIN-005B':1.125,'V-FIN-007':1.44,'V-FIN-009':1.4256,'V-FIN-057':0.72};
     function normCode(c){return String(c==null?'':c).trim().toUpperCase().replace(/[\u2018\u2019\u02BC\u0060\u00B4]/g,"'");}
     function boxM2For(code){return BOX_M2[normCode(code)]||0;}
     function isBoxUnit(u){return /th[u\u00f9]ng/i.test(String(u||''));}
