@@ -368,7 +368,7 @@ th{background:#f4f5fb!important;color:#5b6478!important;}
     function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
     function sources(){return [...new Set([...state.inventory.map(x=>canonicalSource(x.source)),...state.transactions.map(x=>canonicalSource(x.source))])].filter(Boolean).sort((a,b)=>a.localeCompare(b,'vi'))}
     function uniqueValues(values){return [...new Set(values.map(v=>String(v||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi'))}
-    function materialOptions(){const map=new Map(); for(const item of inventory()){const key=String(item.code||'').trim(); if(key&&!map.has(key))map.set(key,item)} return [...map.values()].sort((a,b)=>String(a.code).localeCompare(String(b.code),'vi'))}
+    function materialOptions(){const map=new Map(); for(const item of inventory(true)){const key=String(item.code||'').trim(); if(key&&!map.has(key))map.set(key,item)} return [...map.values()].sort((a,b)=>String(a.code).localeCompare(String(b.code),'vi'))}
     function materialOptionsForSource(){const sel=$('fSource'); const src=sel?canonicalSource(sel.value):''; const all=materialOptions(); return src?all.filter(i=>canonicalSource(i.source)===src):all;}
     function refreshMaterialList(){fillDatalist('materialList', materialOptionsForSource().map(i=>{const c=String(i.code||'').trim(),nm=String(i.name||'').trim(); return (c&&c!==nm)?`${c} | ${nm}`:nm;}));}
     function fillDatalist(id, values){$(id).innerHTML=values.map(v=>`<option value="${esc(v)}"></option>`).join('')}
@@ -391,14 +391,14 @@ th{background:#f4f5fb!important;color:#5b6478!important;}
     function factorForCode(code){return factorMap()[String(code||'').trim().toUpperCase()]||0}
     function boxesForRow(r){const f=boxM2For(r.code)||factorForCode(r.code); if(f>0&&isM2Unit(r.unit))return Math.max(0,n(r.stock))/f; return null}
     function boxCell(r){const bx=boxesForRow(r); return bx==null?'<span style="color:#9fb0c0">—</span>':('<b>'+viNum(bx)+'</b>');}
-    function inventory(){
+    function inventory(includeZeroCatalog){
       const map=new Map();
       const primaryTileKeys=new Set(state.inventory.filter(x=>canonicalSource(x.source)==='Vật tư chính'&&isTileMaterial(x)).map(itemKey));
       for(const x of state.inventory){
         const src=canonicalSource(x.source);
         if(src==='Vật tư Nhà máy'&&isTileMaterial(x)&&primaryTileKeys.has(itemKey(x)))continue;
         const finalSrc=src==='Vật tư Nhà máy'&&isTileMaterial(x)?'Vật tư chính':src;
-        if(isZeroCatalogRow(finalSrc,x))continue;
+        if(!includeZeroCatalog&&isZeroCatalogRow(finalSrc,x))continue;
         const k=`${sourceKey(finalSrc)}|${String(x.code).toUpperCase()}|${String(x.unit).toUpperCase()}`;
         if(!map.has(k))map.set(k,{...x,source:finalSrc,sources:[finalSrc],stock:0,inQty:0,outQty:0});
         const item=map.get(k);
