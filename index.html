@@ -151,9 +151,12 @@
     #partnerStatBody{max-height:430px;overflow:auto}
     #partnerStatBody table{width:100%;border-collapse:collapse}
     #partnerStatBody th{position:sticky;top:0;background:#f7f9fc;color:#64748b;font-size:11px;text-transform:uppercase;text-align:left;padding:9px 10px;font-weight:700;z-index:2}
-    #partnerStatBody td{padding:9px 10px;border-top:1px solid var(--line-soft);font-size:13px;color:#2f3e55}
+    #partnerStatBody th{white-space:nowrap}
+    #partnerStatBody td{padding:9px 10px;border-top:1px solid var(--line-soft);font-size:13px;color:#2f3e55;white-space:normal;overflow-wrap:anywhere;vertical-align:middle}
     #partnerStatBody td.num,#partnerStatBody th.num{text-align:right}
-    #partnerStatBody td.name{max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    #partnerStatBody td:first-child,#partnerStatBody td.num{white-space:nowrap}
+    #partnerStatBody td.code{white-space:nowrap;min-width:0;max-width:none}
+    #partnerStatBody td.name{max-width:320px;min-width:170px}
 
     /* Định mức gạch theo mẫu căn */
     .tile-norm-wrap{padding:14px 16px;overflow:auto}
@@ -184,10 +187,10 @@
     th,td{padding:9px 10px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:middle;white-space:nowrap}
     th{position:sticky;top:0;background:#f7f9fc;color:#64748b;text-transform:uppercase;font-size:11px;letter-spacing:.03em;z-index:2;border-bottom:1px solid var(--line)}
     tbody tr:hover{background:#f4f8ff}
-    .name{max-width:none;min-width:150px;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35;word-break:break-word}
-    td.wrap{white-space:normal;line-height:1.4;min-width:200px;word-break:break-word}
+    .name{max-width:440px;min-width:150px;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35;overflow-wrap:anywhere}
+    td.wrap{white-space:normal;line-height:1.4;min-width:200px;overflow-wrap:anywhere}
     .num{text-align:right;font-variant-numeric:tabular-nums}
-    .code{font-weight:700;color:#1c3a56;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;white-space:normal;word-break:break-word;max-width:190px}
+    .code{font-weight:700;color:#1c3a56;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;white-space:normal;overflow-wrap:anywhere;min-width:110px;max-width:220px}
     th .th-filter{border:0;background:transparent;min-height:0;padding:2px 5px;margin-left:4px;font-size:8.5px;color:#9aa7b8;cursor:pointer;border-radius:5px;vertical-align:middle;line-height:1.4}
     th .th-filter:hover{background:#e6edf6;color:var(--primary)}
     th .th-filter.active{color:#fff;background:var(--primary)}
