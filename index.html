@@ -426,6 +426,8 @@
       const map=new Map();
       const primaryTileKeys=new Set(state.inventory.filter(x=>canonicalSource(x.source)==='Vật tư chính'&&isTileMaterial(x)).map(itemKey));
       for(const x of state.inventory){
+        // Nhóm "NT tự thi công" (đá/nhôm kính/kim loại) chưa có KL về -> bỏ qua, không phải hàng kho quản lý
+        if(String(x.note||'').indexOf('[NT tự thi công')===0&&!n(x.stock)&&!n(x.inQty)&&!n(x.outQty))continue;
         const src=canonicalSource(x.source);
         if(src==='Vật tư Nhà máy'&&isTileMaterial(x)&&primaryTileKeys.has(itemKey(x)))continue;
         const finalSrc=src==='Vật tư Nhà máy'&&isTileMaterial(x)?'Vật tư chính':src;
