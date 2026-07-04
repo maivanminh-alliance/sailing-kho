@@ -42,7 +42,7 @@
     .app{min-height:100vh;display:grid;grid-template-columns:1fr;grid-template-rows:64px 52px 1fr}
     .system-header{grid-column:1/-1;background:linear-gradient(115deg,#13294b,#1f4479);color:#fff;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:0 22px}
     .system-brand{display:flex;align-items:center;gap:14px;min-width:0;justify-self:start}
-    .system-brand img{height:38px;width:38px;border-radius:8px;object-fit:cover;flex:0 0 auto}
+    .system-brand img{display:none}
     .company-mark{height:34px;min-width:88px;border-radius:8px;background:#fff;color:#16234d;display:grid;place-items:center;font-size:13px;font-weight:900;letter-spacing:.05em}
     .brand-copy{display:flex;flex-direction:column;gap:1px;min-width:0}
     .brand-copy strong{font-size:19px;font-weight:800;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -81,25 +81,16 @@
     /* ---------- Dashboard ---------- */
     .dashboard{display:grid;grid-template-columns:1fr;gap:16px;align-items:start}
     .dash-col-left,.dashboard-left,.dashboard-right{display:grid;gap:16px;min-width:0;align-content:start}
-    .alert-dashboard{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-    .alert-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;display:grid;gap:10px;min-width:0;cursor:pointer;transition:.15s}
-    .alert-card:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(16,24,40,.1)}
-    .alert-card span{font-size:12.5px;color:var(--muted);font-weight:700;display:flex;align-items:center}
-    .alert-card span::before{content:"";width:8px;height:8px;border-radius:50%;margin-right:8px;background:#cbd5e1}
-    .alert-card.danger span::before{background:var(--alert)}
-    .alert-card.warn span::before{background:var(--out)}
-    .alert-card.watch span::before{background:var(--primary)}
-    .alert-card strong{font-size:32px;line-height:1;font-weight:800;color:#22314a}
-    .alert-card.danger strong{color:var(--alert)}
-    .alert-card.warn strong{color:var(--out)}
-    .alert-card.watch strong{color:var(--primary)}
-    .alert-card small{color:#8d9bae;font-size:12px}
-    .kpi-track{height:8px;background:var(--line-soft);border-radius:999px;overflow:hidden}
-    .kpi-fill{height:100%;width:0;border-radius:999px;background:var(--primary);transition:width .35s ease}
-    .kpi-fill.stock{background:var(--primary)}
-    .kpi-fill.in{background:var(--in)}
-    .kpi-fill.out{background:var(--out)}
-    .kpi-fill.alert{background:var(--alert)}
+
+    /* KPI Summary — thay thế 3 thẻ cảnh báo % */
+    .kpi-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    .kpi-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0}
+    .kpi-card>span{font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+    .kpi-card>strong{font-size:28px;font-weight:800;line-height:1.1;color:#22314a}
+    .kpi-card>small{font-size:11.5px;color:#9aa7be}
+    .kpi-card.kpi-in>strong{color:var(--in)}
+    .kpi-card.kpi-out>strong{color:var(--out)}
+    .kpi-card.kpi-stock>strong{color:var(--primary)}
 
     /* Bộ đếm nhóm vật tư cần kiểm soát */
     .group-alert-counter{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px}
@@ -113,18 +104,32 @@
     .gac-chip small{opacity:.75}
     .gac-chip .gac-n{font-weight:700}
 
-    .alert-tools{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:end}
-    .alert-tools label{margin:0}
-    .alerts{display:block;padding:0 16px 16px;max-height:420px;overflow:auto}
-    .alert-table{width:100%;min-width:0;border-collapse:separate;border-spacing:0;table-layout:fixed}
-    .alert-table th,.alert-table td{padding:8px 9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .alert-table th{position:sticky;top:0;background:#f7f9fc;color:#64748b;font-size:11px;text-transform:uppercase;z-index:5;box-shadow:0 1px 0 var(--line)}
-    .alert-table td{border-bottom:1px solid var(--line-soft)}
-    .alert-table .name{min-width:0;max-width:none}
-    .alert-table .pct-cell{font-weight:900}
-    .alert-table .danger{color:var(--alert)}
-    .alert-table .warn{color:var(--out)}
-    .alert-table .watch{color:var(--primary)}
+    /* ---------- Bottom Sheet Bộ lọc (mobile) ---------- */
+    .filter-btn-trigger{display:none;align-items:center;gap:6px;padding:0 13px;border-radius:10px;color:#52627a;font-weight:700;min-height:40px}
+    .filter-sheet-overlay{display:none;position:fixed;inset:0;background:rgba(13,25,40,.45);z-index:1100}
+    .filter-sheet-overlay.open{display:block}
+    .filter-sheet{position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 32px;box-shadow:0 -8px 32px rgba(16,24,40,.16);z-index:1101;transform:translateY(100%);transition:transform .25s ease;max-height:85svh;overflow:auto}
+    .filter-sheet.open{transform:translateY(0)}
+    .filter-sheet-handle{width:40px;height:4px;background:#cbd5e1;border-radius:999px;margin:0 auto 18px}
+    .filter-sheet h4{margin:0 0 14px;font-size:15px;font-weight:800;color:#1d2b42}
+    .filter-sheet .fs-fields{display:grid;gap:12px}
+    .filter-sheet .fs-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+    .filter-sheet .fs-actions button{min-height:44px;border-radius:12px;font-size:15px}
+
+    /* ---------- Card View (mobile table rows) ---------- */
+    .card-list{display:none;padding:0;gap:10px;flex-direction:column}
+    .wms-card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:13px 14px;display:grid;gap:7px}
+    .wms-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0}
+    .wms-card-name{font-size:13.5px;font-weight:700;color:#1c3a56;line-height:1.35;overflow-wrap:break-word}
+    .wms-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 10px;margin-top:2px}
+    .wms-card-kv{display:flex;flex-direction:column;gap:1px}
+    .wms-card-kv span{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+    .wms-card-kv b{font-size:13.5px;font-weight:800;color:#22314a}
+    .wms-card-kv b.stock-val{color:var(--primary)}
+    .wms-card-kv b.in-val{color:var(--in)}
+    .wms-card-kv b.out-val{color:var(--out)}
+    .wms-card-footer{font-size:11.5px;color:#8d9bae;border-top:1px solid var(--line-soft);padding-top:7px;margin-top:3px}
+    .wms-card-actions{display:flex;gap:7px;margin-top:2px}
 
     /* Biểu đồ nhập - xuất - tồn */
     .chart-wrap{padding:16px 18px;display:grid;gap:12px}
@@ -272,7 +277,7 @@
     @media(max-width:1180px){
       .app{grid-template-rows:64px auto 1fr}
       .nav{justify-content:flex-start;overflow:auto}
-      .alert-dashboard{grid-template-columns:repeat(2,1fr)}
+      .kpi-summary{grid-template-columns:repeat(2,1fr)}
       .toolbar{grid-template-columns:1fr 1fr}
     }
     @media(max-width:860px){
@@ -284,14 +289,12 @@
       .sidebar{padding:6px 8px;min-height:48px}
       .nav button{flex:0 0 auto}
       main{display:block}
-      .topbar{grid-template-columns:1fr;height:auto;padding:12px;gap:10px}
+      .topbar{grid-template-columns:1fr auto;height:auto;padding:12px;gap:10px}
       .title h2{white-space:normal;font-size:20px}
-      .top-actions{grid-column:auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+      .top-actions{grid-column:1/-1;width:100%;display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:center}
       .top-actions button{min-width:0}
-      .top-actions #openReturn,#wmsRefresh{grid-column:1/-1}
-      .alert-dashboard{grid-template-columns:1fr}
-      .alert-tools{grid-template-columns:1fr 1fr}
-      .alert-tools label{grid-column:1/-1}
+      #wmsRefresh{min-width:42px;width:42px;padding:0;font-size:18px;justify-content:center}
+      .kpi-summary{grid-template-columns:repeat(2,1fr)}
       .toolbar{grid-template-columns:1fr}
       .flow-group{grid-template-columns:1fr;gap:8px}
       .partner-filters{grid-template-columns:1fr}
@@ -314,10 +317,15 @@
       .module-head .meta{text-align:right;line-height:1.3}
       .chart-wrap{padding:12px}
       .metric-row{grid-template-columns:46px 1fr 78px;gap:8px}
-      .table-wrap{max-height:calc(100svh - 330px);-webkit-overflow-scrolling:touch}
-      table{min-width:880px;font-size:13px}
-      th,td{padding:8px 9px}
-      .name{max-width:240px;min-width:180px}
+      /* Card view ON, table view OFF on mobile */
+      .table-wrap{display:none}
+      .card-list{display:flex}
+      /* Bộ lọc: ẩn dropdowns + nút Bỏ lọc, hiện filter trigger */
+      .toolbar{grid-template-columns:1fr auto;gap:8px;padding:10px 12px}
+      .toolbar>label:not(:first-child){display:none}
+      .toolbar>#clearFilter{display:none}
+      .filter-btn-trigger{display:flex}
+      /* Tối ưu footer, form, drawer */
       .footerbar{display:grid;grid-template-columns:1fr;gap:8px}
       .pager{justify-content:space-between}
       .pager button{min-width:78px}
@@ -328,8 +336,15 @@
       form{padding:12px;gap:11px;-webkit-overflow-scrolling:touch}
       textarea{min-height:92px}
       form button[type="submit"]{min-height:48px;border-radius:10px;font-size:16px}
-      .alerts{max-height:320px;padding:0 10px 10px}
       #wmsSyncDot{position:absolute;right:14px;top:14px}
+      /* Ẩn đồng bộ dot trong header khi dùng topbar */
+      .kpi-summary{grid-template-columns:1fr 1fr}
+      /* Topbar mobile: title row + action row */
+      .topbar{grid-template-columns:1fr;padding:10px 12px;gap:8px}
+      .title h2{font-size:17px}
+      .top-actions{grid-column:1;width:100%;display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px}
+      #wmsRefresh{width:42px;min-width:42px;font-size:18px;padding:0;display:flex;align-items:center;justify-content:center}
+      #wmsRefresh .refresh-label{display:none}
     }
   </style>
 <style id="wms-noselect">*{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}input,textarea,select,[contenteditable="true"]{-webkit-user-select:text!important;-moz-user-select:text!important;-ms-user-select:text!important;user-select:text!important;}img{-webkit-user-drag:none;user-drag:none;}</style>
@@ -360,10 +375,11 @@
       <nav class="nav"><button class="active" data-view="dashboard"><span class="ico">▦</span>Tổng quan</button><span class="nav-sep" aria-hidden="true"></span><button data-view="inventory"><span class="ico">▤</span>Tồn kho</button><button data-view="inbound"><span class="ico">↓</span>Nhập kho</button><button data-view="outbound"><span class="ico">↑</span>Xuất kho</button><button data-view="returns"><span class="ico">⇄</span>Đổi trả</button><span class="nav-sep" aria-hidden="true"></span><button data-view="history"><span class="ico">⟲</span>Lịch sử</button><button data-view="sources"><span class="ico">◎</span>Nguồn dữ liệu</button></nav>
     </aside>
     <main>
-      <header class="topbar"><div class="title"><h2 id="pageTitle">Tổng quan kho</h2></div><div class="top-actions"><button class="primary" id="openInbound">+ Nhập kho</button><button class="primary" id="openOutbound">+ Xuất kho</button><button class="primary return" id="openReturn">+ Vật tư đổi trả</button></div></header>
+      <header class="topbar"><div class="title"><h2 id="pageTitle">Tổng quan kho</h2></div><div class="top-actions"><button class="primary" id="openInbound">+ Nhập kho</button><button class="primary" id="openOutbound">+ Xuất kho</button><button class="primary return" id="openReturn">+ Vật tư đổi trả</button><button id="wmsRefresh" type="button" title="Làm mới dữ liệu">⟳<span class="refresh-label"> Làm mới</span></button><span id="wmsSyncDot" style="width:11px;height:11px;border-radius:50%;background:#9aa7b3;display:inline-flex;flex:0 0 auto;align-self:center"></span></div></header>
       <section class="content">
-        <section class="dashboard" id="dashboardView"><div class="dash-col-left"><section class="alert-dashboard" id="alertDashboard"><article class="alert-card danger" data-alert-drill="critical"><span>Cảnh báo đỏ · dưới 10%</span><strong id="criticalPct">0%</strong><small id="criticalCount">0 mã cần xử lý</small><div class="kpi-track"><div class="kpi-fill alert" id="criticalBar"></div></div></article><article class="alert-card warn" data-alert-drill="warning"><span>Cảnh báo cam · 10% đến dưới 30%</span><strong id="warningPct">0%</strong><small id="warningCount">0 mã cần theo dõi</small><div class="kpi-track"><div class="kpi-fill out" id="warningBar"></div></div></article><article class="alert-card watch" data-alert-drill="watch"><span>Cảnh báo sớm · 30% đến dưới 50%</span><strong id="watchPct">0%</strong><small id="watchCount">0 mã sắp hết</small><div class="kpi-track"><div class="kpi-fill stock" id="watchBar"></div></div></article></section><div class="dashboard-left"><article class="module"><div class="module-head"><h3>So sánh nhập - xuất - tồn theo nhóm vật tư</h3><span class="meta">Tỷ lệ theo từng nhóm vật tư</span></div><div class="chart-wrap" id="flowChart"></div><div class="legend"><span><i class="dot" style="background:#10b981"></i>Nhập</span><span><i class="dot" style="background:#f59e0b"></i>Xuất</span><span><i class="dot" style="background:#3b82f6"></i>Tồn</span></div></article><article class="module"><div class="module-head"><h3>Thống kê vật tư đã xuất theo đơn vị nhận</h3><span class="meta" id="partnerStatMeta"></span></div><div class="chart-wrap"><div class="partner-filters"><label class="stat-pick">Đơn vị nhận<select id="partnerStat"></select></label><label class="stat-pick">Tìm hạng mục<input id="partnerItemFilter" placeholder="Mã, tên vật tư, căn/khu vực, phiếu..."></label></div><div class="table-wrap" id="partnerStatBody"></div></div></article><article class="module" id="tileNormModule"><div class="module-head"><h3>Định mức gạch theo mẫu căn</h3><span class="meta" id="tileNormMeta"></span></div><div class="tile-norm-wrap" id="tileNormBody"></div></article></div></div><div class="dashboard-right"><div class="group-alert-counter" id="groupAlertCounter"></div><div class="alert-tools"><label>Tìm trong cảnh báo<input id="alertSearch" placeholder="Mã, tên vật tư, nguồn/kho..."></label><button class="primary" id="alertSearchBtn">Tìm</button><button id="alertClearBtn">Bỏ lọc</button></div><article class="module"><div class="module-head"><h3>Cảnh báo đỏ · dưới 10%</h3><span class="meta" id="criticalMeta"></span></div><div class="alerts" id="criticalAlerts"></div></article><article class="module"><div class="module-head"><h3>Cảnh báo cam · 10% đến dưới 30%</h3><span class="meta" id="alertMeta"></span></div><div class="alerts" id="alerts"></div></article><article class="module"><div class="module-head"><h3>Cảnh báo sớm · 30% đến dưới 50%</h3><span class="meta" id="lowMeta"></span></div><div class="alerts" id="lowStock"></div></article></div></section>
-        <section class="module" id="tableView"><div class="module-head"><h3 id="moduleTitle">Danh sách tồn kho</h3><span class="meta" id="moduleMeta"></span></div><div class="toolbar"><label>Tìm kiếm<input id="search" placeholder="Nhập mã, tên vật tư, nhà thầu, người nhận..."></label><label>Sheet / kho<select id="sourceFilter"></select></label><label>Trạng thái<select id="statusFilter"><option value="all">Tất cả</option><option value="ok">Còn ≥ 50%</option><option value="low10">Dưới 10%</option><option value="low30">10% đến dưới 30%</option><option value="low50">30% đến dưới 50%</option><option value="empty">Hết</option></select></label><label>Sắp xếp<select id="sortBy"><option value="stockDesc">Tồn giảm dần</option><option value="stockAsc">Tồn tăng dần</option><option value="code">Mã vật tư</option><option value="name">Tên vật tư</option><option value="dateDesc">Ngày mới nhất</option></select></label><button id="clearFilter">Bỏ lọc</button></div><div class="table-wrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div><div class="footerbar"><span id="rowInfo"></span><div class="pager"><button id="prevPage">Trước</button><span id="pageInfo"></span><button id="nextPage">Sau</button></div></div></section>
+        <section class="dashboard" id="dashboardView"><div class="dash-col-left"><section class="kpi-summary" id="kpiSummary"><div class="kpi-card"><span>Tổng mã vật tư</span><strong id="kpiTotalCodes">—</strong><small>mã đang quản lý</small></div><div class="kpi-card kpi-in"><span>Tổng đã nhập</span><strong id="kpiTotalIn">—</strong><small>lượng nhập kho</small></div><div class="kpi-card kpi-out"><span>Tổng đã xuất</span><strong id="kpiTotalOut">—</strong><small>lượng xuất kho</small></div><div class="kpi-card kpi-stock"><span>Tổng tồn kho</span><strong id="kpiTotalStock">—</strong><small>đang tồn kho</small></div></section><span id="criticalPct" style="display:none"></span><span id="criticalCount" style="display:none"></span><span id="criticalBar" style="display:none"></span><span id="warningPct" style="display:none"></span><span id="warningCount" style="display:none"></span><span id="warningBar" style="display:none"></span><span id="watchPct" style="display:none"></span><span id="watchCount" style="display:none"></span><span id="watchBar" style="display:none"></span><div class="dashboard-left"><article class="module"><div class="module-head"><h3>So sánh nhập - xuất - tồn theo nhóm vật tư</h3><span class="meta">Tỷ lệ theo từng nhóm vật tư</span></div><div class="chart-wrap" id="flowChart"></div><div class="legend"><span><i class="dot" style="background:#10b981"></i>Nhập</span><span><i class="dot" style="background:#f59e0b"></i>Xuất</span><span><i class="dot" style="background:#3b82f6"></i>Tồn</span></div></article><article class="module"><div class="module-head"><h3>Thống kê vật tư đã xuất theo đơn vị nhận</h3><span class="meta" id="partnerStatMeta"></span></div><div class="chart-wrap"><div class="partner-filters"><label class="stat-pick">Đơn vị nhận<select id="partnerStat"></select></label><label class="stat-pick">Tìm hạng mục<input id="partnerItemFilter" placeholder="Mã, tên vật tư, căn/khu vực, phiếu..."></label></div><div class="table-wrap" id="partnerStatBody"></div></div></article><article class="module" id="tileNormModule"><div class="module-head"><h3>Định mức gạch theo mẫu căn</h3><span class="meta" id="tileNormMeta"></span></div><div class="tile-norm-wrap" id="tileNormBody"></div></article></div></div><div class="dashboard-right"><div class="group-alert-counter" id="groupAlertCounter"></div><span id="criticalMeta" style="display:none"></span><span id="criticalAlerts" style="display:none"></span><span id="alertMeta" style="display:none"></span><span id="alerts" style="display:none"></span><span id="lowMeta" style="display:none"></span><span id="lowStock" style="display:none"></span></div></section>
+        <section class="module" id="tableView"><div class="module-head"><h3 id="moduleTitle">Danh sách tồn kho</h3><span class="meta" id="moduleMeta"></span></div><div class="toolbar"><label>Tìm kiếm<input id="search" placeholder="Nhập mã, tên vật tư, nhà thầu, người nhận..."></label><button class="filter-btn-trigger" id="filterSheetBtn" type="button">⚙ Bộ lọc</button><label>Sheet / kho<select id="sourceFilter"></select></label><label>Trạng thái<select id="statusFilter"><option value="all">Tất cả</option><option value="ok">Còn ≥ 50%</option><option value="low10">Dưới 10%</option><option value="low30">10% đến dưới 30%</option><option value="low50">30% đến dưới 50%</option><option value="empty">Hết</option></select></label><label>Sắp xếp<select id="sortBy"><option value="stockDesc">Tồn giảm dần</option><option value="stockAsc">Tồn tăng dần</option><option value="code">Mã vật tư</option><option value="name">Tên vật tư</option><option value="dateDesc">Ngày mới nhất</option></select></label><button id="clearFilter">Bỏ lọc</button></div><div class="table-wrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div><div id="cardView" class="card-list" style="padding:0 0 8px"></div><div class="footerbar"><span id="rowInfo"></span><div class="pager"><button id="prevPage">Trước</button><span id="pageInfo"></span><button id="nextPage">Sau</button></div></div></section>
+        <div class="filter-sheet-overlay" id="filterSheetOverlay"><div class="filter-sheet" id="filterSheet"><div class="filter-sheet-handle"></div><h4>Bộ lọc &amp; Sắp xếp</h4><div class="fs-fields"><label>Sheet / kho<select id="sourceFilterM"></select></label><label>Trạng thái<select id="statusFilterM"><option value="all">Tất cả</option><option value="ok">Còn ≥ 50%</option><option value="low10">Dưới 10%</option><option value="low30">10% đến dưới 30%</option><option value="low50">30% đến dưới 50%</option><option value="empty">Hết</option></select></label><label>Sắp xếp<select id="sortByM"><option value="stockDesc">Tồn giảm dần</option><option value="stockAsc">Tồn tăng dần</option><option value="code">Mã vật tư</option><option value="name">Tên vật tư</option><option value="dateDesc">Ngày mới nhất</option></select></label></div><div class="fs-actions"><button id="filterSheetClear">Bỏ lọc</button><button class="primary" id="filterSheetApply">Áp dụng</button></div></div></div>
         <footer class="copyright">© 2026 Mai Văn Minh. All rights reserved.</footer>
       </section>
     </main>
@@ -558,7 +574,8 @@
     function gacGroupOf(r){return prettySource(canonicalSource(r.source));}
     function groupCounts(rows){const m=new Map(); rows.forEach(r=>{const g=gacGroupOf(r); if(!isMaterialGroup(g))return; if(!m.has(g))m.set(g,{name:g,total:0,low:0}); const o=m.get(g); o.total++; if(r.status!=='ok')o.low++;}); return [...m.values()].sort((a,b)=>b.low-a.low||b.total-a.total);}
     function renderGroupCounter(rows){const el=document.getElementById('groupAlertCounter'); if(!el)return; const gc=groupCounts(rows); const totalLow=gc.reduce((s,x)=>s+x.low,0); const totalAll=gc.reduce((s,x)=>s+x.total,0); let h='<div class="gac-title">Vật tư cần kiểm soát</div><div class="gac-chips">'; h+=`<button type="button" class="gac-chip${groupFilter===''?' active':''}" data-gac="">Tất cả <b>${fmt.format(totalLow)}</b><small>/${fmt.format(totalAll)}</small></button>`; gc.forEach(x=>{h+=`<button type="button" class="gac-chip${groupFilter===x.name?' active':''}" data-gac="${esc(x.name)}"><span class="gac-n">${esc(x.name)}</span><b>${fmt.format(x.low)}</b><small>/${fmt.format(x.total)}</small></button>`;}); h+='</div>'; el.innerHTML=h; el.querySelectorAll('[data-gac]').forEach(b=>{b.onclick=()=>{const v=b.getAttribute('data-gac')||''; groupFilter=(groupFilter===v)?'':v; renderStockAlerts();};});}
-    function renderStockAlerts(){const all=inventory().sort((a,b)=>(a.stockPct||0)-(b.stockPct||0)); renderGroupCounter(all); if(groupFilter&&!all.some(r=>gacGroupOf(r)===groupFilter))groupFilter=''; const base=groupFilter?all.filter(r=>gacGroupOf(r)===groupFilter):all; const critical=base.filter(r=>r.status==='empty'||r.status==='low10'); const warning=base.filter(r=>r.status==='low30'); const watch=base.filter(r=>r.status==='low50'); const q=(document.getElementById('alertSearch')?.value||'').trim().toLowerCase(); const f=list=>q?list.filter(r=>alertSearchText(r).includes(q)):list; setAlertCard('critical',critical,base.length,'dưới 10%'); setAlertCard('warning',warning,base.length,'từ 10% đến dưới 30%'); setAlertCard('watch',watch,base.length,'từ 30% đến dưới 50%'); renderAlertList('criticalMeta','criticalAlerts',f(critical),'danger','Không có cảnh báo đỏ','Không có vật tư nào tồn dưới 10% hoặc hết hàng.'); renderAlertList('alertMeta','alerts',f(warning),'warn','Không có cảnh báo cam','Không có vật tư nào tồn từ 10% đến dưới 30%.'); renderAlertList('lowMeta','lowStock',f(watch),'watch','Không có cảnh báo sớm','Không có vật tư nào tồn từ 30% đến dưới 50%.');}
+    function renderKpiSummary(){const inv=inventory(); let totalIn=0,totalOut=0,totalStock=0; inv.forEach(r=>{totalIn+=n(r.inQty);totalOut+=n(r.outQty);totalStock+=Math.max(0,n(r.stock));}); const el=id=>document.getElementById(id); if(el('kpiTotalCodes'))el('kpiTotalCodes').textContent=fmt.format(inv.length); if(el('kpiTotalIn'))el('kpiTotalIn').textContent=fmt.format(totalIn); if(el('kpiTotalOut'))el('kpiTotalOut').textContent=fmt.format(totalOut); if(el('kpiTotalStock'))el('kpiTotalStock').textContent=fmt.format(Math.round(totalStock));}
+    function renderStockAlerts(){const all=inventory().sort((a,b)=>(a.stockPct||0)-(b.stockPct||0)); renderKpiSummary(); renderGroupCounter(all); if(groupFilter&&!all.some(r=>gacGroupOf(r)===groupFilter))groupFilter=''; const base=groupFilter?all.filter(r=>gacGroupOf(r)===groupFilter):all; const critical=base.filter(r=>r.status==='empty'||r.status==='low10'); const warning=base.filter(r=>r.status==='low30'); const watch=base.filter(r=>r.status==='low50'); setAlertCard('critical',critical,base.length,'dưới 10%'); setAlertCard('warning',warning,base.length,'từ 10% đến dưới 30%'); setAlertCard('watch',watch,base.length,'từ 30% đến dưới 50%');}
     function tileModelOf(area){let t=String(area||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase(); let m=t.match(/\b([A-E])\s*-?\s*0*\d{1,3}\b/); if(m)return m[1]; m=t.match(/(?:KHU|MAU|DANG|CAN)\s*([A-E])\b/); if(m)return m[1]; m=t.match(/(?:^|[^A-Z])([A-E])(?:$|[^A-Z])/); return m?m[1]:'';}
     const TILE_MODELS=[['A',16],['B',49],['C',20],['D',5],['E',14]];
     function renderTileNorm(){const el=$('tileNormBody'); if(!el)return; const inv=inventory(); const tiles=inv.filter(x=>x.models&&Object.keys(x.models).length&&(sourceKey(x.group).includes('GACH')||isTileMaterial(x))); const codeSet=new Map(); tiles.forEach(t=>codeSet.set(String(t.code).toUpperCase(),t)); const issued={}; let unkQty=0,unkN=0; (state.transactions||[]).filter(r=>r.type==='out').forEach(r=>{const code=String(r.code||'').toUpperCase(); if(!codeSet.has(code))return; let q=n(r.qty); const f=boxM2For(r.code); if(f>0&&isBoxUnit(r.unit))q=q*f; const md=tileModelOf(r.area); if(!md){unkQty+=q;unkN++;return;} if(!issued[code])issued[code]={}; issued[code][md]=(issued[code][md]||0)+q;});
@@ -580,7 +597,8 @@
     function auditBadge(a){a=String(a||''); return a==='Xóa'?'<span class="badge empty">Xóa</span>':a==='Sửa'?'<span class="badge low">Sửa</span>':'<span class="badge ok">'+esc(a)+'</span>'}
     function recordActions(r){if(!r.manual)return ''; const id=esc(r.id||''); return '<div class="row-actions"><button class="edit" type="button" data-edit-record="'+id+'">Sửa</button><button class="delete" type="button" data-delete-record="'+id+'">Xóa</button></div>'}
     function bindRecordActions(){document.querySelectorAll('[data-edit-record]').forEach(b=>b.onclick=e=>{e.preventDefault();openEditRecord(b.dataset.editRecord)}); document.querySelectorAll('[data-delete-record]').forEach(b=>b.onclick=e=>{e.preventDefault();deleteRecord(b.dataset.deleteRecord)});}
-    function renderTable(){if(view==='dashboard')return; closeColFilter(); const rows=currentRows(); const total=rows.length; const pages=Math.max(1,Math.ceil(total/pageSize)); page=Math.min(page,pages); const slice=rows.slice((page-1)*pageSize,page*pageSize); $('moduleTitle').textContent=view==='inventory'?'Danh sách tồn kho':view==='inbound'?'Danh sách phiếu nhập':view==='outbound'?'Danh sách phiếu xuất':view==='returns'?'Danh sách phiếu đổi trả':view==='history'?'Lịch sử sửa / xóa phiếu':'Dữ liệu theo sheet nguồn'; $('moduleMeta').textContent=fmt.format(total)+' dòng'; $('tableView').classList.toggle('history-mode',view==='history'); if(view==='history'){$('thead').innerHTML='<tr><th>Thời gian</th><th>Hành động</th><th>Loại phiếu</th><th>Mã</th><th>Tên vật tư</th><th class="num">Khối lượng</th><th>Chi tiết thay đổi</th></tr>'; $('tbody').innerHTML=slice.length?slice.map(r=>`<tr><td>${esc(r.time||'')}</td><td>${auditBadge(r.action)}</td><td>${esc(r.type||'')}</td><td class="code">${esc(r.code||'')}</td><td class="name" title="${esc(r.name||'')}">${esc(r.name||'')}</td><td class="num">${fmt.format(n(r.qty))}</td><td class="wrap" title="${esc(r.detail||'')}">${brk(r.detail||'')}</td></tr>`).join(''):'<tr><td colspan="7" style="text-align:center;color:#8d9bae;padding:26px">Chưa có lịch sử sửa / xóa phiếu nào. Khi bạn sửa hoặc xóa một phiếu, thay đổi sẽ được ghi lại tại đây.</td></tr>';} else if(view==='inbound'||view==='outbound'||view==='returns'){const pLab=view==='returns'?'Đơn vị trả':'Đối tác', gLab=view==='returns'?'Lý do / tình trạng':'Ghi chú'; $('thead').innerHTML='<tr><th>Ngày</th><th>Sheet/kho</th><th>Mã</th><th>Tên vật tư</th><th>ĐVT</th><th class="num">Khối lượng</th><th>'+pLab+'</th><th>Người thực hiện</th><th>Đồng bộ</th><th>'+gLab+'</th><th>Thao tác</th></tr>'; $('tbody').innerHTML=slice.map(r=>`<tr><td>${esc(r.date||'-')}</td><td class="source-list" title="${esc(r.source)}">${esc(prettySource(canonicalSource(r.source)))}</td><td class="code">${esc(r.code)}</td><td class="name" title="${esc(r.name)}">${brk(r.name)}</td><td>${esc(r.unit)}</td><td class="num"><span class="badge ${r.type}">${fmt.format(n(r.qty))}</span>${(()=>{ const _ci=convInfo(r.code,r.unit,r.qty); if(_ci)return '<div class="field-note">'+_ci+'</div>'; const _pb=parseBoxNote(r.note); return _pb.boxes>0?'<div class="field-note">'+viNum(_pb.boxes)+' thùng</div>':''; })()}</td><td>${esc(displayPartner(r))}</td><td>${esc(r.person||'')}</td><td>${syncBadge(r)}</td><td class="name" title="${esc(parseBoxNote(r.note).rest||r.area||'')}">${brk(parseBoxNote(r.note).rest||r.area||'')}</td><td>${recordActions(r)}</td></tr>`).join(''); bindRecordActions();} else {$('thead').innerHTML='<tr><th>Sheet/kho</th><th>Mã vật tư</th><th>Tên vật tư</th><th>ĐVT</th><th class="num">Đã nhập</th><th class="num">Đã xuất</th><th class="num">Tồn</th><th class="num">Tồn (thùng ≈)</th><th>Trạng thái</th><th>Ghi chú</th></tr>'; $('tbody').innerHTML=slice.map(r=>`<tr><td class="source-list" title="${esc(r.source)}">${esc((r.sources||[r.source]).map(prettySource).join(' / '))}</td><td class="code">${esc(r.code)}</td><td class="name" title="${esc(r.name)}">${brk(r.name)}</td><td>${esc(r.unit)}</td><td class="num">${fmt.format(n(r.inQty))}</td><td class="num">${fmt.format(n(r.outQty))}</td><td class="num"><b>${fmt.format(Math.max(0,n(r.stock)))}</b></td><td class="num">${boxCell(r)}</td><td>${statusBadge(r)}</td><td class="name" title="${esc(r.note||'')}">${brk(r.note||'')}</td></tr>`).join('');} decorateThead(); $('rowInfo').textContent=`Hiển thị ${total?((page-1)*pageSize+1):0}-${Math.min(page*pageSize,total)} / ${fmt.format(total)} dòng`; $('pageInfo').textContent=`Trang ${page}/${pages}`; $('prevPage').disabled=page<=1; $('nextPage').disabled=page>=pages;}
+    function renderCardView(slice){const cv=document.getElementById('cardView'); if(!cv)return; if(!slice.length){cv.innerHTML='<div style="padding:20px;text-align:center;color:#8d9bae">Không có dữ liệu</div>';return;} if(view==='inventory'||view==='sources'){cv.innerHTML=slice.map(r=>`<div class="wms-card"><div class="wms-card-head"><span class="code">${esc(r.code)}</span>${statusBadge(r)}</div><div class="wms-card-name">${brk(r.name)}</div><div class="wms-card-grid"><div class="wms-card-kv"><span>Đã nhập</span><b class="in-val">${fmt.format(n(r.inQty))}</b></div><div class="wms-card-kv"><span>Đã xuất</span><b class="out-val">${fmt.format(n(r.outQty))}</b></div><div class="wms-card-kv"><span>Tồn kho</span><b class="stock-val">${fmt.format(Math.max(0,n(r.stock)))}</b></div><div class="wms-card-kv"><span>ĐVT</span><b>${esc(r.unit||'—')}</b></div></div><div class="wms-card-footer">Kho: ${esc((r.sources||[r.source]).map(prettySource).join(' / '))}</div></div>`).join('');}else if(view==='inbound'||view==='outbound'||view==='returns'){const pLab=view==='returns'?'Đơn vị trả':'Đối tác'; cv.innerHTML=slice.map(r=>`<div class="wms-card"><div class="wms-card-head"><span class="code">${esc(r.code)}</span><span class="badge ${r.type}">${r.type==='in'?'Nhập':r.type==='out'?'Xuất':'Đổi trả'}</span></div><div class="wms-card-name">${brk(r.name)}</div><div class="wms-card-grid"><div class="wms-card-kv"><span>Khối lượng</span><b>${fmt.format(n(r.qty))} ${esc(r.unit||'')}</b></div><div class="wms-card-kv"><span>Ngày</span><b>${esc(r.date||'—')}</b></div><div class="wms-card-kv"><span>${esc(pLab)}</span><b>${esc(displayPartner(r)||'—')}</b></div><div class="wms-card-kv"><span>Người TH</span><b>${esc(r.person||'—')}</b></div></div>${r.area||parseBoxNote(r.note).rest?`<div class="wms-card-footer">${brk(parseBoxNote(r.note).rest||r.area||'')}</div>`:''}<div class="wms-card-actions">${recordActions(r)}</div></div>`).join(''); bindRecordActions();}else if(view==='history'){cv.innerHTML=slice.map(r=>`<div class="wms-card"><div class="wms-card-head">${auditBadge(r.action)}<span style="font-size:12px;color:#8d9bae">${esc(r.time||'')}</span></div><div class="wms-card-name">${esc(r.name||'—')} <span class="code" style="font-size:12px">${esc(r.code||'')}</span></div><div class="wms-card-grid"><div class="wms-card-kv"><span>Loại phiếu</span><b>${esc(r.type||'—')}</b></div><div class="wms-card-kv"><span>KL</span><b>${fmt.format(n(r.qty))}</b></div></div>${r.detail?`<div class="wms-card-footer">${brk(r.detail)}</div>`:''}</div>`).join('');}else{cv.innerHTML='';}}
+    function renderTable(){if(view==='dashboard')return; closeColFilter(); const rows=currentRows(); const total=rows.length; const pages=Math.max(1,Math.ceil(total/pageSize)); page=Math.min(page,pages); const slice=rows.slice((page-1)*pageSize,page*pageSize); $('moduleTitle').textContent=view==='inventory'?'Danh sách tồn kho':view==='inbound'?'Danh sách phiếu nhập':view==='outbound'?'Danh sách phiếu xuất':view==='returns'?'Danh sách phiếu đổi trả':view==='history'?'Lịch sử sửa / xóa phiếu':'Dữ liệu theo sheet nguồn'; $('moduleMeta').textContent=fmt.format(total)+' dòng'; $('tableView').classList.toggle('history-mode',view==='history'); if(view==='history'){$('thead').innerHTML='<tr><th>Thời gian</th><th>Hành động</th><th>Loại phiếu</th><th>Mã</th><th>Tên vật tư</th><th class="num">Khối lượng</th><th>Chi tiết thay đổi</th></tr>'; $('tbody').innerHTML=slice.length?slice.map(r=>`<tr><td>${esc(r.time||'')}</td><td>${auditBadge(r.action)}</td><td>${esc(r.type||'')}</td><td class="code">${esc(r.code||'')}</td><td class="name" title="${esc(r.name||'')}">${esc(r.name||'')}</td><td class="num">${fmt.format(n(r.qty))}</td><td class="wrap" title="${esc(r.detail||'')}">${brk(r.detail||'')}</td></tr>`).join(''):'<tr><td colspan="7" style="text-align:center;color:#8d9bae;padding:26px">Chưa có lịch sử sửa / xóa phiếu nào. Khi bạn sửa hoặc xóa một phiếu, thay đổi sẽ được ghi lại tại đây.</td></tr>';} else if(view==='inbound'||view==='outbound'||view==='returns'){const pLab=view==='returns'?'Đơn vị trả':'Đối tác', gLab=view==='returns'?'Lý do / tình trạng':'Ghi chú'; $('thead').innerHTML='<tr><th>Ngày</th><th>Sheet/kho</th><th>Mã</th><th>Tên vật tư</th><th>ĐVT</th><th class="num">Khối lượng</th><th>'+pLab+'</th><th>Người thực hiện</th><th>Đồng bộ</th><th>'+gLab+'</th><th>Thao tác</th></tr>'; $('tbody').innerHTML=slice.map(r=>`<tr><td>${esc(r.date||'-')}</td><td class="source-list" title="${esc(r.source)}">${esc(prettySource(canonicalSource(r.source)))}</td><td class="code">${esc(r.code)}</td><td class="name" title="${esc(r.name)}">${brk(r.name)}</td><td>${esc(r.unit)}</td><td class="num"><span class="badge ${r.type}">${fmt.format(n(r.qty))}</span>${(()=>{ const _ci=convInfo(r.code,r.unit,r.qty); if(_ci)return '<div class="field-note">'+_ci+'</div>'; const _pb=parseBoxNote(r.note); return _pb.boxes>0?'<div class="field-note">'+viNum(_pb.boxes)+' thùng</div>':''; })()}</td><td>${esc(displayPartner(r))}</td><td>${esc(r.person||'')}</td><td>${syncBadge(r)}</td><td class="name" title="${esc(parseBoxNote(r.note).rest||r.area||'')}">${brk(parseBoxNote(r.note).rest||r.area||'')}</td><td>${recordActions(r)}</td></tr>`).join(''); bindRecordActions();} else {$('thead').innerHTML='<tr><th>Sheet/kho</th><th>Mã vật tư</th><th>Tên vật tư</th><th>ĐVT</th><th class="num">Đã nhập</th><th class="num">Đã xuất</th><th class="num">Tồn</th><th class="num">Tồn (thùng ≈)</th><th>Trạng thái</th><th>Ghi chú</th></tr>'; $('tbody').innerHTML=slice.map(r=>`<tr><td class="source-list" title="${esc(r.source)}">${esc((r.sources||[r.source]).map(prettySource).join(' / '))}</td><td class="code">${esc(r.code)}</td><td class="name" title="${esc(r.name)}">${brk(r.name)}</td><td>${esc(r.unit)}</td><td class="num">${fmt.format(n(r.inQty))}</td><td class="num">${fmt.format(n(r.outQty))}</td><td class="num"><b>${fmt.format(Math.max(0,n(r.stock)))}</b></td><td class="num">${boxCell(r)}</td><td>${statusBadge(r)}</td><td class="name" title="${esc(r.note||'')}">${brk(r.note||'')}</td></tr>`).join('');} decorateThead(); renderCardView(slice); $('rowInfo').textContent=`Hiển thị ${total?((page-1)*pageSize+1):0}-${Math.min(page*pageSize,total)} / ${fmt.format(total)} dòng`; $('pageInfo').textContent=`Trang ${page}/${pages}`; $('prevPage').disabled=page<=1; $('nextPage').disabled=page>=pages;}
     function render(){renderShell();renderDashboard();renderTable();if(dataDirty){save();dataDirty=false}}
     function fileToPayload(file){return new Promise((resolve,reject)=>{if(!file){resolve(null);return} const img=new Image(); const reader=new FileReader(); reader.onload=()=>{img.onload=()=>{const max=900,ratio=Math.min(1,max/Math.max(img.width,img.height)); const canvas=document.createElement('canvas'); canvas.width=Math.max(1,Math.round(img.width*ratio)); canvas.height=Math.max(1,Math.round(img.height*ratio)); const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height); const dataUrl=canvas.toDataURL('image/jpeg',.62); const base64=String(dataUrl).split(',')[1]||''; resolve({name:String(file.name||'anh-minh-chung.jpg').replace(/\.[^.]+$/,'.jpg'),type:'image/jpeg',base64,dataUrl,originalSize:file.size,size:Math.round(base64.length*.75)})}; img.onerror=()=>{const fallback=new FileReader(); fallback.onload=()=>{const dataUrl=fallback.result; const base64=String(dataUrl).split(',')[1]||''; resolve({name:file.name,type:file.type,base64,dataUrl,originalSize:file.size,size:file.size})}; fallback.onerror=reject; fallback.readAsDataURL(file)}; img.src=reader.result}; reader.onerror=reject; reader.readAsDataURL(file);})}
     async function filesToPayloads(files){return (await Promise.all([...files].map(f=>photoJobs.get(f)||fileToPayload(f)))).filter(Boolean)}
@@ -602,7 +620,32 @@
     function fillSubSelect(){var sel=document.getElementById('fSub'); if(!sel)return; var subs=window.wmsSubs||['NGUYÊN KHÔI']; var cur=sel.value; sel.innerHTML='<option value="">— Không —</option>'+subs.map(function(s){return '<option value="'+esc(s)+'">'+esc(s)+'</option>'}).join(''); sel.value=cur;}
     function applyEntryLabels(type){const L=id=>document.getElementById(id); if(L('fSubLabel'))L('fSubLabel').textContent=type==='return'?'Đơn vị trả vật tư (NTP)':'Cấp cho nhà thầu phụ'; if(L('fSubNote'))L('fSubNote').textContent=type==='return'?'Chọn nhà thầu phụ đem trả vật tư (nếu có).':'Chọn NTP để phiếu xuất tự đổ về tab riêng của nhà thầu phụ đó.'; if(L('fPersonLabel'))L('fPersonLabel').textContent=type==='return'?'Người đem trả / bàn giao':'Người yêu cầu / nhận'; if(L('fNoteLabel'))L('fNoteLabel').textContent=type==='return'?'Lý do / tình trạng hư hỏng (bắt buộc)':'Ghi chú';}
     function openEntryDrawer(type){editRecordId=null; editPassword=null; entryType=type; fillSourceSelect(); refreshFormLists(); setPhotoEditingMode(false); applyEntryLabels(type); var submit=$('entryForm').querySelector('button[type="submit"]'); if(submit)submit.textContent='Lưu phiếu'; var _h=document.getElementById('entryTitle'); if(_h){_h.textContent=type==='in'?'📥 PHIẾU NHẬP KHO':type==='return'?'🔁 PHIẾU ĐỔI TRẢ VẬT TƯ':'📤 PHIẾU XUẤT KHO'; _h.style.color=type==='in'?'#0f8a5f':type==='return'?'#7c3aed':'#b86b00';} var _w=document.getElementById('fSubWrap'); if(_w){_w.style.display=(type==='out'||type==='return')?'':'none'; if(type==='out'||type==='return')fillSubSelect();} if($('fQtyUnit')){$('fQtyUnit').value='thùng'; delete $('fQtyUnit').dataset.touched;} if($('fQtyHint'))$('fQtyHint').textContent=''; toggleBoxFields(); $('drawer').classList.add('open')}
-    $('openInbound').onclick=()=>openEntryDrawer('in'); $('openOutbound').onclick=()=>openEntryDrawer('out'); if($('openReturn'))$('openReturn').onclick=()=>openEntryDrawer('return'); (function(){var ps=document.getElementById('partnerStat'); if(ps)ps.onchange=renderPartnerStat; var pf=document.getElementById('partnerItemFilter'); if(pf)pf.oninput=renderPartnerStat; var as=document.getElementById('alertSearch'); var ab=document.getElementById('alertSearchBtn'); var ac=document.getElementById('alertClearBtn'); if(ab)ab.onclick=renderStockAlerts; if(as)as.onkeydown=e=>{if(e.key==='Enter')renderStockAlerts();}; if(ac)ac.onclick=()=>{if(as)as.value='';renderStockAlerts();};})(); $('closeDrawer').onclick=()=>{editRecordId=null;editPassword=null;setPhotoEditingMode(false);$('drawer').classList.remove('open')}; $('closeDrawerOverlay').onclick=()=>{editRecordId=null;editPassword=null;setPhotoEditingMode(false);$('drawer').classList.remove('open')}; $('closeSettings').onclick=()=>$('settings').classList.remove('open'); $('closeSettingsOverlay').onclick=()=>$('settings').classList.remove('open');
+    $('openInbound').onclick=()=>openEntryDrawer('in'); $('openOutbound').onclick=()=>openEntryDrawer('out'); if($('openReturn'))$('openReturn').onclick=()=>openEntryDrawer('return');
+    // Filter sheet (mobile)
+    (function(){
+      function openSheet(){
+        const sf=document.getElementById('sourceFilterM'); if(sf){sf.innerHTML=$('sourceFilter').innerHTML; sf.value=$('sourceFilter').value;}
+        const stf=document.getElementById('statusFilterM'); if(stf)stf.value=$('statusFilter').value;
+        const sb=document.getElementById('sortByM'); if(sb)sb.value=$('sortBy').value;
+        document.getElementById('filterSheetOverlay').classList.add('open');
+        document.getElementById('filterSheet').classList.add('open');
+      }
+      function closeSheet(){document.getElementById('filterSheetOverlay').classList.remove('open'); document.getElementById('filterSheet').classList.remove('open');}
+      const btn=document.getElementById('filterSheetBtn'); if(btn)btn.onclick=openSheet;
+      const ov=document.getElementById('filterSheetOverlay'); if(ov)ov.onclick=function(e){if(e.target===ov)closeSheet();};
+      const apply=document.getElementById('filterSheetApply');
+      if(apply)apply.onclick=function(){
+        const sf=document.getElementById('sourceFilterM'); if(sf)$('sourceFilter').value=sf.value;
+        const stf=document.getElementById('statusFilterM'); if(stf)$('statusFilter').value=stf.value;
+        const sb=document.getElementById('sortByM'); if(sb)$('sortBy').value=sb.value;
+        alertDrill=null; page=1; closeSheet(); renderTable();
+      };
+      const clr=document.getElementById('filterSheetClear');
+      if(clr)clr.onclick=function(){alertDrill=null;colFilters={};$('search').value='';$('sourceFilter').value='all';$('statusFilter').value='all';$('sortBy').value='stockDesc';page=1;closeSheet();render();};
+      // Cập nhật sourceFilterM mỗi khi renderShell chạy
+      const _origRenderShell=renderShell;
+      window.renderShell=renderShell=function(){_origRenderShell(); const sf=document.getElementById('sourceFilterM'); if(sf)sf.innerHTML=$('sourceFilter').innerHTML;};
+    })(); (function(){var ps=document.getElementById('partnerStat'); if(ps)ps.onchange=renderPartnerStat; var pf=document.getElementById('partnerItemFilter'); if(pf)pf.oninput=renderPartnerStat; var as=document.getElementById('alertSearch'); var ab=document.getElementById('alertSearchBtn'); var ac=document.getElementById('alertClearBtn'); if(ab)ab.onclick=renderStockAlerts; if(as)as.onkeydown=e=>{if(e.key==='Enter')renderStockAlerts();}; if(ac)ac.onclick=()=>{if(as)as.value='';renderStockAlerts();};})(); $('closeDrawer').onclick=()=>{editRecordId=null;editPassword=null;setPhotoEditingMode(false);$('drawer').classList.remove('open')}; $('closeDrawerOverlay').onclick=()=>{editRecordId=null;editPassword=null;setPhotoEditingMode(false);$('drawer').classList.remove('open')}; $('closeSettings').onclick=()=>$('settings').classList.remove('open'); $('closeSettingsOverlay').onclick=()=>$('settings').classList.remove('open');
     document.querySelectorAll('[data-entry]').forEach(b=>b.onclick=()=>{entryType=b.dataset.entry;document.querySelectorAll('[data-entry]').forEach(x=>x.classList.toggle('active',x===b))}); $('fDate').valueAsDate=new Date();
     function addPhotoFiles(files){const imgs=[...files].filter(file=>file&&file.type&&file.type.startsWith('image/')); if(!imgs.length)return; imgs.forEach(f=>photoJobs.set(f,fileToPayload(f).catch(()=>null))); selectedPhotos=selectedPhotos.concat(imgs); renderPhotoPreview();}
     function removePhotoAt(i){const _rm=selectedPhotos.splice(i,1); _rm.forEach(f=>photoJobs.delete(f)); renderPhotoPreview();}
@@ -697,15 +740,8 @@
     }
 
     function injectButtons() {
-      var bar = document.querySelector('.top-actions') || document.querySelector('.topbar') || document.body;
-      if (!bar || document.getElementById('wmsRefresh')) return;
-      var dot = document.createElement('span');
-      dot.id = 'wmsSyncDot';
-      dot.style.cssText = 'width:11px;height:11px;border-radius:50%;background:#9aa7b3;display:inline-block;flex:0 0 auto;align-self:center';
-      var b = document.createElement('button');
-      b.id = 'wmsRefresh'; b.type = 'button'; b.textContent = '⟳ Làm mới';
-      b.onclick = function () { liveSync(false); };
-      bar.appendChild(dot); bar.appendChild(b);
+      var b = document.getElementById('wmsRefresh');
+      if (b && !b._bound) { b.onclick = function(){ liveSync(false); }; b._bound = true; }
     }
 
     function boot() {
