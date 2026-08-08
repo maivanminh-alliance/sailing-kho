@@ -753,14 +753,19 @@
       const body=rows.map(t=>{const md=t.models||{}; const code=String(t.code).toUpperCase(); const cells=TILE_MODELS.map(p=>{const norm=n(md[p[0]]); const iss=n((issued[code]||{})[p[0]]); if(norm<=0&&iss<=0)return '<td class="tn-cell tn-0">—</td>'; const pct=norm>0?iss/norm*100:999; if(pct>100.5)ms.over++; else if(pct>=100)ms.m100++; else if(pct>=90)ms.m90++; else if(pct>=70)ms.m70++; else if(pct>=50)ms.m50++; else if(pct>=30)ms.m30++; const txt=norm>0?Math.round(pct)+'%':'∞'; return `<td class="tn-cell ${band(pct)}" title="Đã xuất ${viNum(iss)} / định mức về ${viNum(norm)} m²">${txt}<small>${viNum(Math.floor(iss))}/${viNum(Math.floor(norm))}</small></td>`;}).join(''); return `<tr><td class="code">${esc(t.code)}</td><td class="nm" title="${esc(t.name)}">${esc(t.name)}</td>${cells}</tr>`;}).join('');
       const head=`<tr><th style="text-align:left">Mã gạch</th><th style="text-align:left">Tên</th>${TILE_MODELS.map(p=>`<th>Mẫu ${p[0]}<small style="display:block;font-weight:600;text-transform:none">${p[1]} căn</small></th>`).join('')}</tr>`;
       el.innerHTML=rows.length?`<table><thead>${head}</thead><tbody>${body}</tbody></table><div class="tile-norm-legend"><span><i class="tn-30"></i>≥30%</span><span><i class="tn-50"></i>≥50%</span><span><i class="tn-70"></i>≥70%</span><span><i class="tn-90"></i>≥90%</span><span><i class="tn-100"></i>≥100%</span><span><i class="tn-over"></i>Vượt định mức (hao hụt)</span></div>`:`<div class="help" style="padding:14px">Chưa có mã gạch nào có định mức theo mẫu căn, hoặc chưa có phiếu xuất gạch.</div>`;
-      const mt=$('tileNormMeta'); if(mt)mt.textContent=`${rows.length} mã · đạt ≥100%: ${ms.m100+ms.over} ô`+(ms.over?` · vượt định mức: ${ms.over} ô`:'')+(unkN?` · ${unkN} phiếu chưa rõ mẫu căn (${viNum(unkQty)} m²)`:'');}
+      const mt=$('tileNormMeta'); if(mt)mt.innerHTML=partialWarn()+`${rows.length} mã · đạt ≥100%: ${ms.m100+ms.over} ô`+(ms.over?` · vượt định mức: ${ms.over} ô`:'')+(unkN?` · ${unkN} phiếu chưa rõ mẫu căn (${viNum(unkQty)} m²)`:'');}
+    /* CHỐT CHẶN: 2 bảng dưới đây cộng dồn từ danh sách phiếu đã tải về máy. Nếu vì
+       lý do gì đó máy chưa tải đủ phiếu, số liệu sẽ THIẾU — phải nói rõ ra chứ
+       không được im lặng đưa con số sai cho người đọc báo cáo. */
+    function logIsPartial(){const tot=n(state.logTotal); return tot>0&&(state.transactions||[]).filter(t=>!t.history).length<tot;}
+    function partialWarn(){return logIsPartial()?'<b style="color:#b45309">⚠ Đang thiếu phiếu — số liệu chưa đủ, bấm Làm mới.</b> · ':'';}
     function renderDashboard(){$('dashboardView').style.display=view==='dashboard'?'grid':'none'; $('tableView').style.display=view==='dashboard'?'none':'block'; $('pageTitle').textContent=view==='dashboard'?'Tổng quan kho':view==='inventory'?'Tồn kho':view==='inbound'?'Nhập kho':view==='outbound'?'Xuất kho':view==='returns'?'Vật tư đổi trả':view==='history'?'Lịch sử sửa / xóa':'Nguồn dữ liệu'; if(view==='dashboard'){renderCharts(); renderStockAlerts(); renderPartnerStat(); renderTileNorm();}}
     function drillAlert(kind){const st=kind==='critical'?'low10':kind==='warning'?'low30':'low50'; alertDrill=kind; view='inventory'; page=1; colFilters={}; closeColFilter(); document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view)); $('search').value=''; $('sourceFilter').value='all'; $('statusFilter').value=st; $('sortBy').value='stockAsc'; render(); setTimeout(()=>$('tableView').scrollIntoView({behavior:'smooth',block:'start'}),0);}
     function rcptOf(r){var x=(r.subcontractor&&String(r.subcontractor).trim())||(r.partner&&String(r.partner).trim())||'Alliance'; return /^alliance$/i.test(x)?'Alliance':x;}
     function partnerSearchText(r){return [rcptOf(r),r.code,r.name,r.unit,r.person,r.area,r.doc,r.note,r.date].join(' ').toLowerCase()}
     function renderPartnerStat(){const outs=(state.transactions||[]).filter(x=>x.type==='out'); const q=(document.getElementById('partnerItemFilter')?.value||'').trim().toLowerCase(); const _codeSet=new Set(outs.map(r=>String(r.code||'').trim().toLowerCase())); const _exactCode=q&&_codeSet.has(q); const match=r=>!q||(_exactCode?String(r.code||'').trim().toLowerCase()===q:partnerSearchText(r).includes(q)); const filtered=outs.filter(match); const parts=[...new Set(outs.map(rcptOf))].sort((a,b)=>String(a).localeCompare(String(b),'vi')); const sel=$('partnerStat'); if(!sel)return; const cur=sel.value||'all'; sel.innerHTML='<option value="all">Tất cả đơn vị</option>'+parts.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join(''); sel.value=[...sel.options].some(o=>o.value===cur)?cur:'all'; const pick=sel.value;
-      if(pick==='all'){const map=new Map(); filtered.forEach(r=>{const k=rcptOf(r); if(!map.has(k))map.set(k,{unit:k,codes:new Set(),qty:0,slips:0}); const g=map.get(k); g.codes.add((r.code||r.name)+'|'+r.unit); g.qty+=n(r.qty); g.slips+=1;}); const rows=[...map.values()].sort((a,b)=>b.qty-a.qty); $('partnerStatMeta').textContent=fmt.format(rows.length)+' đơn vị'+(q?' · đang lọc hạng mục':''); $('partnerStatBody').innerHTML=rows.length?`<table><thead><tr><th>Đơn vị nhận</th><th class="num">Số mã</th><th class="num">Tổng KL xuất</th><th class="num">Số phiếu</th></tr></thead><tbody>${rows.map(r=>`<tr style="cursor:pointer" title="Bấm để xem chi tiết đã xuất cho ${esc(r.unit)}" onclick="document.getElementById('partnerStat').value='${esc(r.unit).replace(/'/g,"\\'")}';renderPartnerStat()"><td class="name">${esc(r.unit)}</td><td class="num">${fmt.format(r.codes.size)}</td><td class="num"><b>${fmt.format(r.qty)}</b></td><td class="num">${fmt.format(r.slips)}</td></tr>`).join('')}</tbody></table>`:`<div class="help" style="padding:14px">${q?'Không tìm thấy hạng mục khớp bộ lọc.':'Chưa có phiếu xuất nào trong hệ thống. Tạo phiếu xuất để bắt đầu thống kê.'}</div>`;}
-      else{const list=filtered.filter(r=>rcptOf(r)===pick).sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))); const tong=list.reduce((s,r)=>s+n(r.qty),0); const soMa=new Set(list.map(r=>(r.code||r.name)+'|'+r.unit)).size; $('partnerStatMeta').textContent=esc(pick)+' · '+fmt.format(soMa)+' mã · '+fmt.format(list.length)+' lần xuất · tổng KL '+fmt.format(tong)+(q?' · đang lọc hạng mục':''); $('partnerStatBody').innerHTML=list.length?`<table><thead><tr><th>Ngày xuất</th><th>Mã</th><th>Tên vật tư</th><th>ĐVT</th><th class="num">Khối lượng</th><th class="num">Quy đổi</th><th>Người nhận</th><th>Căn/Khu vực</th><th>BB/Phiếu</th></tr></thead><tbody>${list.map(r=>`<tr><td>${fmtDate(r.date)||'-'}</td><td class="code">${esc(r.code||'')}</td><td class="name" title="${esc(r.name)}">${brk(r.name)}</td><td>${esc(r.unit||'')}</td><td class="num"><b>${fmt.format(n(r.qty))}</b></td><td class="num">${(()=>{ const _ci=convInfo(r.code,r.unit,r.qty); if(_ci)return _ci; const _pb=parseBoxNote(r.note); return _pb.boxes>0?viNum(_pb.boxes)+' thùng':'—'; })()}</td><td>${esc(r.person||'')}</td><td>${brk(r.area||'')}</td><td>${esc(r.doc||'')}</td></tr>`).join('')}<tr><td colspan="4" style="font-weight:800;text-align:right">TỔNG</td><td class="num" style="font-weight:900">${fmt.format(tong)}</td><td colspan="4"></td></tr></tbody></table>`:`<div class="help" style="padding:14px">${q?'Không tìm thấy hạng mục khớp bộ lọc cho đơn vị này.':'Chưa có phiếu xuất cho đơn vị này.'}</div>`;}}
+      if(pick==='all'){const map=new Map(); filtered.forEach(r=>{const k=rcptOf(r); if(!map.has(k))map.set(k,{unit:k,codes:new Set(),qty:0,slips:0}); const g=map.get(k); g.codes.add((r.code||r.name)+'|'+r.unit); g.qty+=n(r.qty); g.slips+=1;}); const rows=[...map.values()].sort((a,b)=>b.qty-a.qty); $('partnerStatMeta').innerHTML=partialWarn()+fmt.format(rows.length)+' đơn vị'+(q?' · đang lọc hạng mục':''); $('partnerStatBody').innerHTML=rows.length?`<table><thead><tr><th>Đơn vị nhận</th><th class="num">Số mã</th><th class="num">Tổng KL xuất</th><th class="num">Số phiếu</th></tr></thead><tbody>${rows.map(r=>`<tr style="cursor:pointer" title="Bấm để xem chi tiết đã xuất cho ${esc(r.unit)}" onclick="document.getElementById('partnerStat').value='${esc(r.unit).replace(/'/g,"\\'")}';renderPartnerStat()"><td class="name">${esc(r.unit)}</td><td class="num">${fmt.format(r.codes.size)}</td><td class="num"><b>${fmt.format(r.qty)}</b></td><td class="num">${fmt.format(r.slips)}</td></tr>`).join('')}</tbody></table>`:`<div class="help" style="padding:14px">${q?'Không tìm thấy hạng mục khớp bộ lọc.':'Chưa có phiếu xuất nào trong hệ thống. Tạo phiếu xuất để bắt đầu thống kê.'}</div>`;}
+      else{const list=filtered.filter(r=>rcptOf(r)===pick).sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))); const tong=list.reduce((s,r)=>s+n(r.qty),0); const soMa=new Set(list.map(r=>(r.code||r.name)+'|'+r.unit)).size; $('partnerStatMeta').innerHTML=partialWarn()+esc(pick)+' · '+fmt.format(soMa)+' mã · '+fmt.format(list.length)+' lần xuất · tổng KL '+fmt.format(tong)+(q?' · đang lọc hạng mục':''); $('partnerStatBody').innerHTML=list.length?`<table><thead><tr><th>Ngày xuất</th><th>Mã</th><th>Tên vật tư</th><th>ĐVT</th><th class="num">Khối lượng</th><th class="num">Quy đổi</th><th>Người nhận</th><th>Căn/Khu vực</th><th>BB/Phiếu</th></tr></thead><tbody>${list.map(r=>`<tr><td>${fmtDate(r.date)||'-'}</td><td class="code">${esc(r.code||'')}</td><td class="name" title="${esc(r.name)}">${brk(r.name)}</td><td>${esc(r.unit||'')}</td><td class="num"><b>${fmt.format(n(r.qty))}</b></td><td class="num">${(()=>{ const _ci=convInfo(r.code,r.unit,r.qty); if(_ci)return _ci; const _pb=parseBoxNote(r.note); return _pb.boxes>0?viNum(_pb.boxes)+' thùng':'—'; })()}</td><td>${esc(r.person||'')}</td><td>${brk(r.area||'')}</td><td>${esc(r.doc||'')}</td></tr>`).join('')}<tr><td colspan="4" style="font-weight:800;text-align:right">TỔNG</td><td class="num" style="font-weight:900">${fmt.format(tong)}</td><td colspan="4"></td></tr></tbody></table>`:`<div class="help" style="padding:14px">${q?'Không tìm thấy hạng mục khớp bộ lọc cho đơn vị này.':'Chưa có phiếu xuất cho đơn vị này.'}</div>`;}}
     function statusBadge(r){const s=r.status,pct=r.stockPct??100; if(s==='empty'||n(r.stock)<=0)return '<span class="badge empty">Hết</span>'; if(s==='low10')return `<span class="badge empty">Còn ${pct}%</span>`; if(s==='low30'||s==='low50')return `<span class="badge low">Còn ${pct}%</span>`; return `<span class="badge ok">Còn ${pct}%</span>`}
     function syncBadge(r){if(!r.manual)return ''; if(r.syncStatus==='synced')return '<span class="badge sync">Đã gửi hệ thống</span>'; if(r.syncStatus==='failed')return '<span class="badge fail">Lỗi gửi</span>'; if(r.syncStatus==='sending')return '<span class="badge low">Đang gửi</span>'; if(r.syncStatus==='pending')return '<span class="badge fail">Chưa vào hệ thống</span>'; return '<span class="badge low">Chưa gửi</span>';}
     function auditBadge(a){a=String(a||''); return a==='Xóa'?'<span class="badge empty">Xóa</span>':a==='Sửa'?'<span class="badge low">Sửa</span>':'<span class="badge ok">'+esc(a)+'</span>'}
@@ -1008,11 +1013,14 @@
       });
     }
 
-    var _lastFeedSig = {}, _lastFullSync = 0;   // chữ ký dữ liệu, nhớ RIÊNG cho từng bộ 'parts'
-    // Mỗi phiếu tải về đều phải đọc từ Google Sheet (rất chậm). Bảng chỉ hiện 50
-    // dòng/trang và tồn kho đã được Google Sheet cộng sẵn trên TOÀN BỘ phiếu, nên
-    // tải sẵn 2000 phiếu là thừa -> 600 phiếu, ai cần xem cũ hơn thì bấm "Tải thêm".
-    var logLimit = 400;
+    var _lastFeedSig = {}, _lastFullSync = 0, _dangTaiLaiDayDu = false;   // chữ ký dữ liệu, nhớ RIÊNG cho từng bộ 'parts'
+    // ĐỪNG GIẢM SỐ NÀY ĐỂ CHẠY NHANH HƠN.
+    // Tồn kho thì an toàn (Google Sheet cộng sẵn trên toàn bộ phiếu qua state.agg),
+    // NHƯNG 2 bảng "Định mức gạch theo mẫu căn" và "Thống kê theo đơn vị nhận" lại
+    // cộng dồn TRỰC TIẾP từ state.transactions. Tải thiếu phiếu = 2 bảng đó báo
+    // THIẾU khối lượng đã xuất, mà không có dấu hiệu gì cả. Đã từng xảy ra khi hạ
+    // xuống 400: định mức gạch tụt hẳn so với thực tế.
+    var logLimit = 2000;
     function loadMoreLog(){ logLimit += 2000; showToast('Đang tải thêm phiếu cũ...'); liveSync(false); }
     window.wmsLoadMore = loadMoreLog;
     function liveSync(silent, opts) {
@@ -1026,7 +1034,7 @@
       var fullTurn = !silent || !_lastFullSync || (nowMs - _lastFullSync) > 900000;
       if (fullTurn && !opts.parts) _lastFullSync = nowMs;
       var parts = opts.parts || (fullTurn ? 'inv,agg,log,subs' : 'agg,log');
-      var extra = '&parts=' + parts + '&limit=' + logLimit + (silent ? '' : '&nocache=1')
+      var extra = '&parts=' + parts + '&limit=' + (opts.limit || logLimit) + (silent ? '' : '&nocache=1')
         // freshinv = ép đọc lại tồn kho nền từ 3 file nguồn (phần chậm nhất, ~6-10 giây)
         + (opts.freshinv ? '&freshinv=1' : '');
       return jsonp(url, extra).then(function (data) {
@@ -1038,7 +1046,11 @@
         var _pendingLocal = (state.transactions || []).some(function (t) {
           return t.manual && (_outIds[t.id] || t.syncStatus === 'failed' || t.syncStatus === 'local' || t.syncStatus === 'pending');
         });
-        if (silent && _sig === _lastFeedSig[parts] && !_pendingLocal) { if (!opts.quiet) setSyncDot('ok'); return; }
+        // Máy đang thiếu/thừa phiếu so với sổ thì TUYỆT ĐỐI không được bỏ qua lượt này,
+        // vì đoạn tự kiểm + tự tải lại nằm ở phía dưới.
+        var _soTrenMay = (state.transactions || []).filter(function (t) { return !t.history && t.syncStatus === 'synced'; }).length;
+        var _lechSo = n(data.logTotal) > 0 && _soTrenMay !== n(data.logTotal);
+        if (silent && _sig === _lastFeedSig[parts] && !_pendingLocal && !_lechSo) { if (!opts.quiet) setSyncDot('ok'); return; }
         _lastFeedSig[parts] = _sig;
         // 1) Tồn kho nền lấy LIVE từ 2 sheet -> sửa sheet là web đổi theo
         if (Array.isArray(data.inventory)) {
@@ -1078,12 +1090,34 @@
             return _outIds[t.id] || t.syncStatus === 'failed' || t.syncStatus === 'local' ||
                    t.syncStatus === 'pending' || t.syncStatus === 'sending';
           });
+          // ĐỒNG BỘ TĂNG DẦN — vì sao:
+          // Sổ đã gần 1000 phiếu, tải lại toàn bộ mỗi lần bấm Làm mới mất ~6 giây
+          // và 99% là dữ liệu máy đã có. Nên lượt thường chỉ xin vài trăm phiếu MỚI
+          // NHẤT rồi ghép vào phần cũ. Phiếu cũ nằm ngoài trang này phải GIỮ LẠI,
+          // nếu không 2 bảng "định mức gạch" / "thống kê đơn vị" lại thiếu số.
+          var trangDayDu = opts.full || server.length >= n(data.logTotal);
+          var giuLai = trangDayDu ? [] : (state.transactions || []).filter(function (t) {
+            return !serverIds[t.id] && !_outIds[t.id] && t.syncStatus === 'synced';
+          });
           var seen = {}, merged = [];
-          pending.concat(server).forEach(function (t) {
+          pending.concat(server).concat(giuLai).forEach(function (t) {
             var k = t.id || (t.code + '|' + t.date + '|' + t.qty);
             if (seen[k]) return; seen[k] = 1; merged.push(t);
           });
           state.transactions = merged;
+
+          // TỰ KIỂM: số phiếu trên máy phải khớp đúng số phiếu trong sổ. Lệch nghĩa
+          // là có phiếu bị xoá trên sheet, hoặc ghép thiếu -> tự tải lại đầy đủ ở nền.
+          var soTrenMay = merged.filter(function (t) { return !t.history && t.syncStatus === 'synced'; }).length;
+          var soTrongSo = n(data.logTotal);
+          if (soTrongSo > 0 && soTrenMay !== soTrongSo && !opts.full && !_dangTaiLaiDayDu) {
+            _dangTaiLaiDayDu = true;
+            setTimeout(function () {
+              liveSync(true, { parts: 'log', quiet: true, full: true, limit: Math.max(2000, soTrongSo + 200) })
+                .then(function () { _dangTaiLaiDayDu = false; })
+                .catch(function () { _dangTaiLaiDayDu = false; });
+            }, 300);
+          }
         }
         markDirty(); render();
         if (!opts.quiet) setSyncDot('ok');
@@ -1119,7 +1153,9 @@
         // Nhịp 1 chỉ xin 'agg,log' — đủ để thấy phiếu mới. Lịch sử sửa/xóa và danh
         // sách NTP gần như không đổi nên không kéo ở đây (mỗi phần thừa tốn ~0,5-1 giây).
         b.onclick = function () {
-          liveSync(false, { parts: 'agg,log' }).then(function () {
+          // Chỉ xin 300 phiếu MỚI NHẤT (ghép vào phần máy đã có) -> ~2-3 giây.
+          // Nếu ghép ra thiếu/thừa so với sổ, liveSync tự tải lại đầy đủ ở nền.
+          liveSync(false, { parts: 'agg,log', limit: 300 }).then(function () {
             liveSync(true, { parts: 'inv,subs', quiet: true, freshinv: true })
               .then(function () { showToast('Đã cập nhật tồn kho'); });
           });
@@ -1143,11 +1179,14 @@
       // MỞ APP: xin phần NHẸ trước (phiếu + danh sách NTP) để dùng được ngay,
       // rồi mới xin tồn kho nền + lịch sử ở nền. Trước đây gộp làm 1 nên phải chờ
       // Google đọc xong 3 file Sheet (10-16 giây) mới thấy gì.
-      liveSync(true, { parts: 'agg,log,subs' }).then(function () {
+      // Mở app: máy còn dữ liệu lần trước thì chỉ xin phiếu mới (nhanh);
+      // máy mới tinh thì phải tải đủ.
+      var daCoDuLieu = (state.transactions || []).filter(function (t) { return t.syncStatus === 'synced'; }).length > 0;
+      liveSync(true, daCoDuLieu ? { parts: 'agg,log,subs', limit: 300 } : { parts: 'agg,log,subs' }).then(function () {
         setTimeout(function () { liveSync(true, { parts: 'inv', quiet: true }); }, 800);
         setTimeout(function () { if (window.wmsOutboxFlush) window.wmsOutboxFlush(false); }, 2500);
       });
-      setInterval(function () { if (!document.hidden) liveSync(true); }, 120000);
+      setInterval(function () { if (!document.hidden) liveSync(true, { limit: 300 }); }, 120000);
       (function(){var _lt='',_ld='';var tick=function(){var now=new Date();var t=$('headerTime');var d=$('headerDate');var st=now.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});var sd=now.toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'});if(t&&st!==_lt){t.textContent=st;_lt=st;}if(d&&sd!==_ld){d.textContent=sd;_ld=sd;}};tick();setInterval(tick,15000);})();
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
