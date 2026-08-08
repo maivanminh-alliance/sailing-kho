@@ -860,7 +860,7 @@
 
     function markRecordSynced(id){const r=recordById(id); if(!r)return; if(r.syncStatus!=='synced'){r.syncStatus='synced'; r.confirmed=true; aggApply(r,1);} else {r.confirmed=true;} markDirty();}
 
-    let _outboxBusy=false;
+    let _outboxBusy=false, _sendingId=null;   // _sendingId = phiếu đang trên đường gửi
     async function outboxFlush(manual){
       if(_outboxBusy)return; const list=outboxLoad(); if(!list.length)return;
       if(!navigator.onLine&&!manual)return;
@@ -876,7 +876,10 @@
           if(found[job.record.id]){markRecordSynced(job.record.id); outboxDrop(job.record.id); okCount++; continue;}
           if(!manual&&Number(job.tries||0)>=OUTBOX_MAX_TRIES)continue;   // ngừng tự gửi, chờ bấm "Gửi lại"
           outboxSave(outboxLoad().map(j=>String(j.record.id)===String(job.record.id)?Object.assign({},j,{tries:Number(j.tries||0)+1}):j));
-          const ok=await sendRecord(job.record,job.photos);
+          _sendingId=job.record.id; updateOutboxUI();          // đang gửi -> chưa báo động
+          let ok=false;
+          try{ ok=await sendRecord(job.record,job.photos); }
+          finally{ _sendingId=null; }
           if(ok){markRecordSynced(job.record.id); outboxDrop(job.record.id); okCount++;} else failCount++;
         }
       }finally{
@@ -894,7 +897,11 @@
 
     /* Thanh cảnh báo đỏ: còn phiếu chưa vào sổ thì KHÔNG được để thủ kho tưởng là xong */
     function updateOutboxUI(){
-      const list=outboxLoad(); const n=list.length; let el=document.getElementById('outboxBar');
+      /* CHỈ cảnh báo phiếu THẬT SỰ có vấn đề. Phiếu vừa bấm lưu (tries=0) hoặc
+         đang trên đường gửi thì KHÔNG hiện thanh đỏ — nếu không, mỗi lần lưu
+         phiếu thủ kho lại thấy báo động đỏ chớp lên vài giây rồi tắt, tưởng lỗi. */
+      const list=outboxLoad().filter(j=>Number(j.tries||0)>=1&&String(j.record.id)!==String(_sendingId));
+      const n=list.length; let el=document.getElementById('outboxBar');
       if(!n){if(el)el.remove(); return;}
       if(!el){el=document.createElement('div'); el.id='outboxBar'; el.style.cssText='position:fixed;left:12px;right:12px;bottom:96px;z-index:9999;background:#b91c1c;color:#fff;border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;justify-content:space-between;box-shadow:0 8px 24px rgba(0,0,0,.28);font-size:14px;line-height:1.35'; document.body.appendChild(el);}
       const stuck=list.every(j=>Number(j.tries||0)>=OUTBOX_MAX_TRIES);
